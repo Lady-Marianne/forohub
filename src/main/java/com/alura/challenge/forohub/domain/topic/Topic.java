@@ -51,5 +51,15 @@ public class Topic {
         this.status = Status.ACTIVE; // Estado inicial.
     }
 
+    public void updateTopic(DataUpdateTopic dataUpdateTopic) {
+        if (dataUpdateTopic.title() != null)
+            this.title = dataUpdateTopic.title();
 
+        if (dataUpdateTopic.message() != null)
+            this.message = dataUpdateTopic.message();
+    }
+
+    public void deleteTopic() {
+        this.status = Status.DELETED;
+    }
 }
