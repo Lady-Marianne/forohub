@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -90,12 +87,23 @@ public class TopicController {
 
     // Eliminar un tópico. Los tópicos que no cumplean con las reglas del foro, serán
     // eliminados de manera "lógica" por los administradores cambiando su status a
-    // "DETELETED:
+    // "DELETED" (eliminado):
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity deleteTopicById(@PathVariable Long id) {
         Topic topic = topicRepository.getReferenceById(id);
         topic.deleteTopic();
+        return ResponseEntity.noContent().build();
+    }
+
+    // Aprobar un tópico. Los tópicos tienen un status por default de "PENDING" (pendiente).
+    // Si el tópico cumple con las reglas del foro, los administradores lo aprueban y cambian
+    // su status a "ACTIVE" (activo):
+    @PutMapping("/{id}/status")
+    @Transactional
+    public ResponseEntity approveTopicById(@PathVariable Long id) {
+        Topic topic = topicRepository.getReferenceById(id);
+        topic.approveTopic();
         return ResponseEntity.noContent().build();
     }
 }

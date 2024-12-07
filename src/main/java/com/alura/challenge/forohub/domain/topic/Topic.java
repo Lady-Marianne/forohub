@@ -36,7 +36,7 @@ public class Topic {
     }
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.ACTIVE;
+    private Status status = Status.PENDING;
 
     private String author;
 
@@ -48,7 +48,7 @@ public class Topic {
         this.author = dataRegisterTopic.author();
         this.course = dataRegisterTopic.course();
         this.createdAt = LocalDateTime.now(); // Asigna la fecha actual.
-        this.status = Status.ACTIVE; // Estado inicial.
+        this.status = Status.PENDING; // Estado inicial.
     }
 
     public void updateTopic(DataUpdateTopic dataUpdateTopic) {
@@ -61,5 +61,9 @@ public class Topic {
 
     public void deleteTopic() {
         this.status = Status.DELETED;
+    }
+
+    public void approveTopic() {
+        this.status = Status.ACTIVE;
     }
 }
