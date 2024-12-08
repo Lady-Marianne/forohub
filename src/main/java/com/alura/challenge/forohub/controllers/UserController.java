@@ -1,7 +1,6 @@
 package com.alura.challenge.forohub.controllers;
 
 import com.alura.challenge.forohub.domain.ValidationException;
-import com.alura.challenge.forohub.domain.topic.Topic;
 import com.alura.challenge.forohub.domain.user.DataRegisterUser;
 import com.alura.challenge.forohub.domain.user.DataResponseUser;
 import com.alura.challenge.forohub.domain.user.User;
@@ -32,7 +31,7 @@ public class UserController {
 
         // Verificar si el usuario ya existe (por su correo electrónico o nombre de usuario):
         Optional<User> existingUser = userRepository.findByUsernameOrEmail(dataRegisterUser.username(),
-                dataRegisterUser.eMail());
+                dataRegisterUser.email());
 
         // Si ya existe, lanzar una excepción:
         if (existingUser.isPresent()) {

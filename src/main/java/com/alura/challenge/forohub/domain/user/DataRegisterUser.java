@@ -11,7 +11,7 @@ public record DataRegisterUser(
 
         @NotBlank(message = "El correo electrónico es obligatorio.")
         @Email(message = "El correo electrónico debe tener un formato válido.")
-        String eMail,
+        String email,
 
         @NotBlank(message = "La contraseña es obligatoria.")
         @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres.")
