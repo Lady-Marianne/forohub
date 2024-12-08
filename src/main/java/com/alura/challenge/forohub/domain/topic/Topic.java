@@ -1,7 +1,6 @@
 package com.alura.challenge.forohub.domain.topic;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,26 +19,17 @@ public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull
     private String title;
-
-    @NotNull
     private String message;
-
     @Column(nullable = false)
     private LocalDateTime createdAt;
-
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
-
     @Enumerated(EnumType.STRING)
     private Status status = Status.PENDING;
-
     private String author;
-
     private String course;
 
     public Topic(DataRegisterTopic dataRegisterTopic) {
