@@ -1,6 +1,8 @@
 package com.alura.challenge.forohub.controllers;
 
 import com.alura.challenge.forohub.domain.user.DataAuthenticateUser;
+import com.alura.challenge.forohub.domain.user.User;
+import com.alura.challenge.forohub.infra.security.DatosJWTToken;
 import com.alura.challenge.forohub.infra.security.TokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +35,9 @@ public class AuthenticationController {
                 dataAuthenticateUser.username(),
                 dataAuthenticateUser.password()
         );
-        authenticationManager.authenticate(authenticationToken);
-        var JWTtoken = tokenService.generateToken();
-        return ResponseEntity.ok(JWTtoken);
+        var authenticatedUser = authenticationManager.authenticate(authenticationToken);
+        var JWTtoken = tokenService.generateToken((User) authenticatedUser.getPrincipal());
+        return ResponseEntity.ok(new DatosJWTToken(JWTtoken));
     }
 
 }
