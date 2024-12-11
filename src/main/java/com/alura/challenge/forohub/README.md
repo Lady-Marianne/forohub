@@ -48,3 +48,11 @@ public class TopicController {
         return ResponseEntity.ok(pagedModel);
     }
 }
+
+Contraseñas:
+
+Juan Perez 123456
+Carlos Lopez qwerty789
+Maria Garcia password123
+usuario_prueba contraseña123
+usuario.prueba clave123
