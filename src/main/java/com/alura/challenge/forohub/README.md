@@ -56,3 +56,4 @@ Carlos Lopez qwerty789
 Maria Garcia password123
 usuario_prueba contraseña123
 usuario.prueba clave123
+mariana.lois clavesecreta123

@@ -1,6 +1,7 @@
 package com.alura.challenge.forohub.controllers;
 
 import com.alura.challenge.forohub.domain.user.DataAuthenticateUser;
+import com.alura.challenge.forohub.infra.security.TokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +22,20 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping
     public ResponseEntity authenticateUser(@RequestBody @Valid
-                                               DataAuthenticateUser dataAuthenticateUser) {
+                                           DataAuthenticateUser dataAuthenticateUser) {
 
-        Authentication token = new UsernamePasswordAuthenticationToken(
+        Authentication authenticationToken = new UsernamePasswordAuthenticationToken(
                 dataAuthenticateUser.username(),
                 dataAuthenticateUser.password()
         );
-        authenticationManager.authenticate(token);
-
-        return ResponseEntity.ok().build();
+        authenticationManager.authenticate(authenticationToken);
+        var JWTtoken = tokenService.generateToken();
+        return ResponseEntity.ok(JWTtoken);
     }
 
 }
