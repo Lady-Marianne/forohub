@@ -51,9 +51,33 @@ public class TopicController {
 
 Contraseñas:
 
-Juan Perez 123456
-Carlos Lopez qwerty789
-Maria Garcia password123
-usuario_prueba contraseña123
-usuario.prueba clave123
-mariana.lois clavesecreta123
+[
+{
+"username": "Juan Perez",
+"password": "123456"
+},
+{
+"username": "Carlos Lopez",
+"password": "qwerty789"
+},
+{
+"username": "Maria Garcia",
+"password": "password123"
+},
+{
+"username": "usuario_prueba",
+"password": "contraseña123"
+},
+{
+"username": "usuario.prueba",
+"password": "clave123"
+},
+{
+"username": "mariana.lois",
+"password": "clavesecreta123"
+}
+]
+
+set JWT_SECRET_FOROHUB=clavesecreta123
+mvn spring-boot:run
+
