@@ -1,7 +1,7 @@
 Solucionar el siguiente error:
 
-2024-12-07T10:00:19.070-03:00  WARN 20284 --- [forohub] [nio-8080-exec-1] 
-ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, 
+2024-12-07T10:00:19.070-03:00  WARN 20284 --- [forohub] [nio-8080-exec-1]
+ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported,
 meaning that there is no guarantee about the stability of the resulting JSON structure!
 For a stable JSON structure, please use Spring Data's PagedModel (globally via
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
@@ -65,11 +65,11 @@ Contraseñas:
 "password": "password123"
 },
 {
-"username": "usuario_prueba",
-"password": "contraseña123"
+"username": "usuario.prueba1",
+"password": "contrasenia123"
 },
 {
-"username": "usuario.prueba",
+"username": "usuario.prueba2",
 "password": "clave123"
 },
 {
@@ -81,3 +81,21 @@ Contraseñas:
 set JWT_SECRET_FOROHUB=clavesecreta123
 mvn spring-boot:run
 
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.csrf(csrf -> csrf.disable())
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST,"/login")
+                        .permitAll()
+                       .requestMatchers(HttpMethod.DELETE, "/topics").hasRole("ADMIN")
+                       .requestMatchers("/error")
+                       .permitAll()
+/                     .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**")
+.permitAll()
+.anyRequest()
+.authenticated())
+.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+return httpSecurity.build();
+}

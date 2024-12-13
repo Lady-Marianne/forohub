@@ -10,34 +10,34 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
+//    @Autowired
+//    private UserDetailsService userDetailsService;
+
     @Autowired
-    private UserDetailsService userDetailsService;
+    private SecurityFilter securityFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.csrf(csrf -> csrf.disable())
-                .sessionManagement(sm ->
-                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/login")
-                            .permitAll();
-//                    req.anyRequest().authenticated();
-                    req.anyRequest().permitAll();
-
-
-                })
-//                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+        httpSecurity.csrf(csrf -> csrf.disable())
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST,"/login")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+        return httpSecurity.build();
     }
 
     @Bean
