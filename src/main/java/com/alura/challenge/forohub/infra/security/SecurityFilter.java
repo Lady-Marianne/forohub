@@ -27,24 +27,27 @@ public class SecurityFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-//        String requestPath = request.getRequestURI();
-//        if (requestPath.equals("/login")) {
-//            filterChain.doFilter(request, response);
+        // Obtener el token del header:
+        var authHeader = request.getHeader("Authorization");
+
+//        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+//            // Detenemos la cadena y lanzamos un error si no hay token:
+//            response.setContentType("application/json");
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.getWriter().write("{\"error\": \"Token no proporcionado o inválido.\"}");
 //            return;
 //        }
 
-        // Obtener el token del header:
-        var authHeader = request.getHeader("Authorization");
         if (authHeader != null) {
-            var token = authHeader.replace("Bearer ", "");
-            var nombreUsuario = tokenService.getSubject(token); // Extraer username.
-            if (nombreUsuario != null) {
-                // Token válido:
-                var usuario = userRepository.findByUsername(nombreUsuario);
-                var authentication = new UsernamePasswordAuthenticationToken(usuario, null,
-                        usuario.getAuthorities()); // Forzamos un inicio de sesión.
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+        var token = authHeader.replace("Bearer ", "");
+        var userName = tokenService.getSubject(token); // Extraer username.
+        if (userName != null) {
+            // Token válido:
+            var user = userRepository.findByUsername(userName);
+            var authentication = new UsernamePasswordAuthenticationToken(user, null,
+                    user.getAuthorities()); // Forzamos un inicio de sesión.
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
         }
         filterChain.doFilter(request, response);
         System.out.println("El filtro está siendo llamado.");

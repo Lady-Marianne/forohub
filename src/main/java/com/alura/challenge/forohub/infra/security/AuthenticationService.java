@@ -21,7 +21,6 @@ public class AuthenticationService implements UserDetailsService {
         System.out.println("Resultado de la búsqueda: " + user);
 
         if (user == null) {
-//            System.out.println("Usuario no encontrado");
             throw new UsernameNotFoundException("Usuario no encontrado: " + username);
         }
 

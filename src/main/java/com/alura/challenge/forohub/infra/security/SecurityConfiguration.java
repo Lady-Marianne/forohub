@@ -20,9 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-
     @Autowired
     private SecurityFilter securityFilter;
 

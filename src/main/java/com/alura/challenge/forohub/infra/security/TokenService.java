@@ -42,7 +42,7 @@ public class TokenService {
 
     public String getSubject(String token) {
         if (token == null) {
-            throw new RuntimeException();
+            throw new RuntimeException("El token está vacío.");
         }
         DecodedJWT verifier = null;
         try {

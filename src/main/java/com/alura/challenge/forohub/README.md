@@ -81,6 +81,8 @@ Contraseñas:
 set JWT_SECRET_FOROHUB=clavesecreta123
 mvn spring-boot:run
 
+SECURITY CONFIGURATION:
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(csrf -> csrf.disable())
@@ -99,3 +101,11 @@ mvn spring-boot:run
 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
 return httpSecurity.build();
 }
+
+SECURITY FILTER:
+
+        String requestPath = request.getRequestURI();
+        if (requestPath.equals("/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
