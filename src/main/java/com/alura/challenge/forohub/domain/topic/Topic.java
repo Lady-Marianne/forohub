@@ -1,5 +1,6 @@
 package com.alura.challenge.forohub.domain.topic;
 
+import com.alura.challenge.forohub.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -32,6 +33,10 @@ public class Topic {
     private Status status = Status.PENDING;
     private String author;
     private String course;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public Topic(DataRegisterTopic dataRegisterTopic) {
         this.title = dataRegisterTopic.title();
