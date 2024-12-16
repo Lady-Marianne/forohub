@@ -29,15 +29,6 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         // Obtener el token del header:
         var authHeader = request.getHeader("Authorization");
-
-//        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-//            // Detenemos la cadena y lanzamos un error si no hay token:
-//            response.setContentType("application/json");
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.getWriter().write("{\"error\": \"Token no proporcionado o inválido.\"}");
-//            return;
-//        }
-
         if (authHeader != null) {
         var token = authHeader.replace("Bearer ", "");
         var subject = tokenService.getSubject(token); // Extraer username.

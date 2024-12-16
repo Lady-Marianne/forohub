@@ -65,16 +65,21 @@ Contraseñas:
 "password": "password123"
 },
 {
-"username": "usuario.prueba1",
+"username": "Olga Rodriguez",
 "password": "contrasenia123"
 },
 {
-"username": "usuario.prueba2",
+"username": "Alejandra Vazquez",
 "password": "clave123"
 },
 {
-"username": "mariana.lois",
+"username": "Mariana Lois",
 "password": "clavesecreta123"
+}
+
+{
+"username": "Pablo Levi",
+"password": "999999"
 }
 ]
 
