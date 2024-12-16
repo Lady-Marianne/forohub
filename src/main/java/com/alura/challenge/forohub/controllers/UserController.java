@@ -41,7 +41,7 @@ public class UserController {
         // Crear y guardar el usuario:
         User user = userRepository.save(new User(dataRegisterUser));
         // Construir URL del nuevo recurso:
-        URI url = uriComponentsBuilder.path("/users/{id}").buildAndExpand(user.getId()).toUri();
+        URI url = uriComponentsBuilder.path("/users/{userId}").buildAndExpand(user.getUserId()).toUri();
 
         // Retornar respuesta utilizando el constructor del DTO:
         return ResponseEntity.created(url).body(new DataResponseUser(user));

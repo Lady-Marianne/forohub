@@ -17,12 +17,13 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "userId")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_id")
+    private Long userId;
     private String username;
     private String email;
     private String password;
@@ -72,7 +73,7 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
-                "Id=" + id +
+                "Id=" + userId +
                 ", Nombre='" + username + '\'' +
                 ", Correo electrónico='" + email + '\'' +
                 ", Contraseña='" + password + '\'' +

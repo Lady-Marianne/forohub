@@ -8,7 +8,7 @@ No se refiera a las respuestas que puedan dar otros usuarios en ese tópico.
 
 public record DataResponseTopic(
 
-        Long id,
+        Long topicId,
         String title,
         String message,
         String createdAt,
@@ -21,7 +21,7 @@ public record DataResponseTopic(
     public DataResponseTopic (Topic topic) {
         this
                 (
-                        topic.getId(),
+                        topic.getTopicId(),
                         topic.getTitle(),
                         topic.getMessage(),
                         topic.getCreatedAt().toString(),

@@ -41,7 +41,8 @@ public class TopicController {
         Topic topic = topicRepository.save(new Topic(dataRegisterTopic));
 
         // Construir URL del nuevo recurso:
-        URI url = uriComponentsBuilder.path("/topics/{id}").buildAndExpand(topic.getId()).toUri();
+        URI url = uriComponentsBuilder.path("/topics/{topicId}").
+                buildAndExpand(topic.getTopicId()).toUri();
 
         // Retornar respuesta utilizando el constructor del DTO:
         return ResponseEntity.created(url).body(new DataResponseTopic(topic));
@@ -56,42 +57,42 @@ public class TopicController {
         return ResponseEntity.ok(response);
     }
 
-    // Mostrar un tópico por id:
-    @GetMapping("/{id}")
-    public ResponseEntity returnTopicData(@PathVariable Long id) {
+    // Mostrar un tópico por topicId:
+    @GetMapping("/{topicId}")
+    public ResponseEntity returnTopicData(@PathVariable Long topicId) {
         try
-        {Topic topic = topicRepository.getReferenceById(id);
+        {Topic topic = topicRepository.getReferenceById(topicId);
             // Retornar respuesta utilizando el constructor del DTO:
             return ResponseEntity.ok(new DataResponseTopic(topic));
         } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("El tópico con id " + id + " no existe.");
+            throw new EntityNotFoundException("El tópico con id " + topicId + " no existe.");
         }
     }
 
     // Actualizar un tópico:
-    @PutMapping("/{id}")
+    @PutMapping("/{topicId}")
     @Transactional
-    public ResponseEntity<DataResponseTopic> updateTopicById(@PathVariable Long id,
+    public ResponseEntity<DataResponseTopic> updateTopicById(@PathVariable Long topicId,
                                                          @RequestBody DataUpdateTopic dataUpdateTopic) {
         try {
-            Topic topic = topicRepository.getReferenceById(dataUpdateTopic.id());
+            Topic topic = topicRepository.getReferenceById(dataUpdateTopic.topicId());
             topic.updateTopic(dataUpdateTopic);
             // Guardamos el tópico actualizado:
             topicRepository.save(topic);
             // Devolvemos la respuesta con el DTO actualizado:
             return ResponseEntity.ok(new DataResponseTopic(topic));
         } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("El tópico con id " + id + " no existe.");
+            throw new EntityNotFoundException("El tópico con id " + topicId + " no existe.");
         }
     }
 
     // Eliminar un tópico. Los tópicos que no cumplean con las reglas del foro, serán
     // eliminados de manera "lógica" por los administradores cambiando su status a
     // "DELETED" (eliminado):
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{topicId}")
     @Transactional
-    public ResponseEntity deleteTopicById(@PathVariable Long id) {
-        Topic topic = topicRepository.getReferenceById(id);
+    public ResponseEntity deleteTopicById(@PathVariable Long topicId) {
+        Topic topic = topicRepository.getReferenceById(topicId);
         topic.deleteTopic();
         return ResponseEntity.noContent().build();
     }
@@ -99,10 +100,10 @@ public class TopicController {
     // Aprobar un tópico. Los tópicos tienen un status por default de "PENDING" (pendiente).
     // Si el tópico cumple con las reglas del foro, los administradores lo aprueban y cambian
     // su status a "ACTIVE" (activo):
-    @PutMapping("/{id}/status")
+    @PutMapping("/{topicId}/status")
     @Transactional
-    public ResponseEntity approveTopicById(@PathVariable Long id) {
-        Topic topic = topicRepository.getReferenceById(id);
+    public ResponseEntity approveTopicById(@PathVariable Long topicId) {
+        Topic topic = topicRepository.getReferenceById(topicId);
         topic.approveTopic();
         return ResponseEntity.noContent().build();
     }

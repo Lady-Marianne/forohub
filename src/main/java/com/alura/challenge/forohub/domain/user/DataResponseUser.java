@@ -1,14 +1,14 @@
 package com.alura.challenge.forohub.domain.user;
 
 public record DataResponseUser(
-        Long id,
+        Long userId,
         String username,
         String email
 ) {
     public DataResponseUser (User user) {
         this
                 (
-                        user.getId(),
+                        user.getUserId(),
                         user.getUsername(),
                         user.getEmail()
 
