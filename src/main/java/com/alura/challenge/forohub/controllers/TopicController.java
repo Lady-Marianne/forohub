@@ -2,6 +2,8 @@ package com.alura.challenge.forohub.controllers;
 
 import com.alura.challenge.forohub.domain.ValidationException;
 import com.alura.challenge.forohub.domain.topic.*;
+import com.alura.challenge.forohub.domain.user.User;
+import com.alura.challenge.forohub.domain.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -10,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,28 +27,43 @@ public class TopicController {
     @Autowired
     private TopicRepository topicRepository;
 
-    // Registrar tópico:
+    @Autowired
+    private UserRepository userRepository;
+
+    // Registrar nuevo tópico:
+
     @PostMapping
     public ResponseEntity<DataResponseTopic> registerTopic(
             @RequestBody @Valid DataRegisterTopic dataRegisterTopic,
             UriComponentsBuilder uriComponentsBuilder) {
 
-        // Verificar si el tópico ya existe en la base de datos:
+        // Verificar si el tópico ya existe en la base de datos
         Optional<Topic> existingTopic = topicRepository.findByTitleAndMessage(dataRegisterTopic.title(),
                 dataRegisterTopic.message());
 
-        // Si ya existe, lanzar una excepción:
         if (existingTopic.isPresent()) {
             throw new ValidationException("Ya existe un tópico con el mismo título y mensaje.");
         }
+
+        // Obtener el usuario autenticado desde el contexto de seguridad:
+        UserDetails userDetails = (UserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        String username = userDetails.getUsername();
+
+        // Buscar el usario autenticado en la base de datos:
+        User user = (User) userRepository.findByUsername(username);
+
         // Crear y guardar el tópico:
-        Topic topic = topicRepository.save(new Topic(dataRegisterTopic));
+        Topic topic = new Topic(dataRegisterTopic, username);
+        topic.setUser(user); // Asigna el usuario autenticado al tópico.
+        topic = topicRepository.save(topic);
 
         // Construir URL del nuevo recurso:
-        URI url = uriComponentsBuilder.path("/topics/{topicId}").
-                buildAndExpand(topic.getTopicId()).toUri();
+        URI url = uriComponentsBuilder.path("/topics/{topicId}")
+                .buildAndExpand(topic.getTopicId()).toUri();
 
-        // Retornar respuesta utilizando el constructor del DTO:
         return ResponseEntity.created(url).body(new DataResponseTopic(topic));
     }
 

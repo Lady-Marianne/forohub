@@ -1,0 +1,3 @@
+ALTER TABLE topics ALTER user_id DROP DEFAULT;
+
+

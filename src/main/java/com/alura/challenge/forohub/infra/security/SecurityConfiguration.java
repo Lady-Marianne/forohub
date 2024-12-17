@@ -31,6 +31,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST,"/login", "/users")
                         .permitAll()
+                        .requestMatchers("/error")
+                        .permitAll() // Permitir acceso a `/error`
                         .anyRequest()
                         .authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
