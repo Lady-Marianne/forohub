@@ -13,6 +13,7 @@ public record DataResponseTopic(
         String message,
         String createdAt,
         String status,
+        Long userId,
         String author,
         String course
 
@@ -26,6 +27,7 @@ public record DataResponseTopic(
                         topic.getMessage(),
                         topic.getCreatedAt().toString(),
                         topic.getStatus().toString(),
+                        topic.getUser().getUserId(), // <-- Obtenemos el userId desde la entidad User.
                         topic.getAuthor(),
                         topic.getCourse()
                 );
