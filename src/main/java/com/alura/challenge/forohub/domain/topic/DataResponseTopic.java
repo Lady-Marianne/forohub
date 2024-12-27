@@ -6,11 +6,15 @@ el cliente luego de postear un tópico.
 No se refiera a las respuestas que puedan dar otros usuarios en ese tópico.
  */
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public record DataResponseTopic(
 
         Long topicId,
         String title,
         String message,
+
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
         String createdAt,
         String status,
         Long userId,

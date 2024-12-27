@@ -1,5 +1,6 @@
 package com.alura.challenge.forohub.domain.user;
 
+import com.alura.challenge.forohub.domain.answer.Answer;
 import com.alura.challenge.forohub.domain.topic.Topic;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

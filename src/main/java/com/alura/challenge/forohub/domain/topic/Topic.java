@@ -1,10 +1,14 @@
 package com.alura.challenge.forohub.domain.topic;
 
+import com.alura.challenge.forohub.domain.answer.Answer;
 import com.alura.challenge.forohub.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "Topic")
 @Table(name = "topics")
@@ -16,11 +20,13 @@ public class Topic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "topicId")
+    @Column(name = "topic_id")
     private Long topicId;
     private String title;
     private String message;
+
     @Column(nullable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime createdAt;
 
     @PrePersist
@@ -38,6 +44,9 @@ public class Topic {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answers = new ArrayList<>();
 
     public Topic(DataRegisterTopic dataRegisterTopic, String username) {
         this.title = dataRegisterTopic.title();

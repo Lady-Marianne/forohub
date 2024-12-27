@@ -49,7 +49,7 @@ public class TopicController {
     }
 }
 
-Contraseñas:
+Usuarios y contraseñas:
 
 [
 {

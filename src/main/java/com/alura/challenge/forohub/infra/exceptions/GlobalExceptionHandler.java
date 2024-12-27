@@ -1,7 +1,6 @@
 package com.alura.challenge.forohub.infra.exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
-import com.alura.challenge.forohub.domain.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

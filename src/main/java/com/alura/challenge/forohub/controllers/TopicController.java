@@ -1,6 +1,7 @@
 package com.alura.challenge.forohub.controllers;
 
-import com.alura.challenge.forohub.domain.ValidationException;
+import com.alura.challenge.forohub.infra.business.BusinessRulesService;
+import com.alura.challenge.forohub.infra.exceptions.ValidationException;
 import com.alura.challenge.forohub.domain.topic.*;
 import com.alura.challenge.forohub.domain.user.User;
 import com.alura.challenge.forohub.domain.user.UserRepository;
@@ -30,6 +31,9 @@ public class TopicController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BusinessRulesService businessRulesService;
+
     // Registrar nuevo tópico:
 
     @PostMapping
@@ -37,7 +41,10 @@ public class TopicController {
             @RequestBody @Valid DataRegisterTopic dataRegisterTopic,
             UriComponentsBuilder uriComponentsBuilder) {
 
-        // Verificar si el tópico ya existe en la base de datos
+        businessRulesService.validatePostingTime();
+
+        // Verificar si el tópico ya existe en la base de datos, buscando
+        // por título y mensaje:
         Optional<Topic> existingTopic = topicRepository.findByTitleAndMessage(dataRegisterTopic.title(),
                 dataRegisterTopic.message());
 
@@ -52,7 +59,7 @@ public class TopicController {
                 .getPrincipal();
         String username = userDetails.getUsername();
 
-        // Buscar el usario autenticado en la base de datos:
+        // Buscar el usuario autenticado en la base de datos:
         User user = (User) userRepository.findByUsername(username);
 
         // Crear y guardar el tópico:
@@ -93,8 +100,11 @@ public class TopicController {
     @Transactional
     public ResponseEntity<DataResponseTopic> updateTopicById(@PathVariable Long topicId,
                                                          @RequestBody DataUpdateTopic dataUpdateTopic) {
+
+
         try {
             Topic topic = topicRepository.getReferenceById(dataUpdateTopic.topicId());
+            businessRulesService.validateEditTime(topic.getCreatedAt());
             topic.updateTopic(dataUpdateTopic);
             // Guardamos el tópico actualizado:
             topicRepository.save(topic);

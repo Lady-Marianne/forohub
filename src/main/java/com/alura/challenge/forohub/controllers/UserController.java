@@ -1,6 +1,6 @@
 package com.alura.challenge.forohub.controllers;
 
-import com.alura.challenge.forohub.domain.ValidationException;
+import com.alura.challenge.forohub.infra.exceptions.ValidationException;
 import com.alura.challenge.forohub.domain.user.DataRegisterUser;
 import com.alura.challenge.forohub.domain.user.DataResponseUser;
 import com.alura.challenge.forohub.domain.user.User;
