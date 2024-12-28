@@ -1,7 +1,6 @@
 package com.alura.challenge.forohub.domain.user;
 
 import com.alura.challenge.forohub.domain.answer.Answer;
-import com.alura.challenge.forohub.domain.role.Role;
 import com.alura.challenge.forohub.domain.topic.Topic;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,7 +39,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING) // Guardamos el rol como texto.
     @Column(nullable = false)
-    private Role role = Role.USER; // Valor por defecto es USER.
+    protected Role role = Role.USER; // Valor por defecto es USER.
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Topic> topics = new ArrayList<>();
@@ -52,7 +51,6 @@ public class User implements UserDetails {
         this.username = dataRegisterUser.username();
         this.email = dataRegisterUser.email();
         this.password = dataRegisterUser.password();
-        this.role = Role.USER; // Por defecto es USER.
     }
 
     @Override
