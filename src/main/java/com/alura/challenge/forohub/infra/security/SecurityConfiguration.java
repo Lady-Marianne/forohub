@@ -32,7 +32,10 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/login", "/users")
                         .permitAll()
                         .requestMatchers("/error")
-                        .permitAll() // Permitir acceso a `/error`
+                        .permitAll()
+                        .requestMatchers("/swagger-ui.html",
+                                "/v3/api-docs/**", "/swagger-ui/**")
+                        .permitAll()
                         .anyRequest()
                         .authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);

@@ -5,6 +5,7 @@ import com.alura.challenge.forohub.domain.user.DataRegisterUser;
 import com.alura.challenge.forohub.domain.user.DataResponseUser;
 import com.alura.challenge.forohub.domain.user.User;
 import com.alura.challenge.forohub.domain.user.UserRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
+@SecurityRequirement(name = "bearer-key")
 public class UserController {
 
     @Autowired

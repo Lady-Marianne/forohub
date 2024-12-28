@@ -5,6 +5,7 @@ import com.alura.challenge.forohub.infra.exceptions.ValidationException;
 import com.alura.challenge.forohub.domain.topic.*;
 import com.alura.challenge.forohub.domain.user.User;
 import com.alura.challenge.forohub.domain.user.UserRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/topics")
+@SecurityRequirement(name = "bearer-key")
 public class TopicController {
 
     @Autowired

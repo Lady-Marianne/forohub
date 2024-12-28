@@ -11,6 +11,7 @@ import com.alura.challenge.forohub.domain.answer.DataResponseAnswer;
 import com.alura.challenge.forohub.domain.topic.Topic;
 import com.alura.challenge.forohub.domain.topic.TopicRepository;
 import com.alura.challenge.forohub.domain.user.UserRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/answers")
+@SecurityRequirement(name = "bearer-key")
 public class AnswerController {
 
     @Autowired
