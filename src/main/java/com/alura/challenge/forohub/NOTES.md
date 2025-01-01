@@ -79,7 +79,13 @@ Usuarios y contraseñas:
 
 {
 "username": "Pablo Levi",
-"password": "999999"
+"password": "222222"
+}
+
+{
+"username": "Mariana Admin",
+"email": "marianaadmin@forohub.com",
+"password": "333333"
 }
 ]
 
