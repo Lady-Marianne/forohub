@@ -88,7 +88,11 @@ Usuarios y contraseñas:
 "password": "333333"
 }
 ]
-
+{
+"username": "Jorge Admin",
+"email": "jorgeadmin@forohub.com",
+"password": "999999"
+}
 set JWT_SECRET_FOROHUB=clavesecreta123
 mvn spring-boot:run
 
