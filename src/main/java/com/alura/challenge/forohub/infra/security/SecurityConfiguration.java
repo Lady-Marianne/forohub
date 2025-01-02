@@ -29,7 +29,8 @@ public class SecurityConfiguration {
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST,"/login", "/users")
+                        .requestMatchers(HttpMethod.POST,
+                                "/login", "/users", "/users/admins")
                         .permitAll()
                         .requestMatchers("/error")
                         .permitAll()

@@ -3,10 +3,7 @@ package com.alura.challenge.forohub.domain.user;
 import com.alura.challenge.forohub.domain.answer.Answer;
 import com.alura.challenge.forohub.domain.topic.Topic;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,6 +32,7 @@ public class User implements UserDetails {
     private String username;
 
     private String email;
+    @Setter
     private String password;
 
     @Enumerated(EnumType.STRING) // Guardamos el rol como texto.
@@ -97,4 +95,5 @@ public class User implements UserDetails {
                 ", Contraseña='" + password + '\'' +
                 '}';
     }
+
 }

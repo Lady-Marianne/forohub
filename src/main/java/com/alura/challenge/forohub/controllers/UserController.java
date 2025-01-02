@@ -6,6 +6,7 @@ import com.alura.challenge.forohub.infra.exceptions.ValidationException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,38 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
-//@RestController
-//@RequestMapping("/users")
-//@SecurityRequirement(name = "bearer-key")
-//public class UserController {
-//
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @PostMapping
-//    public ResponseEntity<DataResponseUser> registerUser(
-//            @RequestBody @Validated DataRegisterUser dataRegisterUser,
-//            UriComponentsBuilder uriComponentsBuilder) {
-//
-//        // Verificar si el usuario ya existe (por su correo electrónico o nombre de usuario):
-//        Optional<User> existingUser = userRepository.findByUsernameOrEmail(dataRegisterUser.username(),
-//                dataRegisterUser.email());
-//
-//        // Si ya existe, lanzar una excepción:
-//        if (existingUser.isPresent()) {
-//            throw new ValidationException("El usuario ya está registrado.");
-//        }
-//
-//        // Crear y guardar el usuario:
-//        User user = userRepository.save(new User(dataRegisterUser));
-//        // Construir URL del nuevo recurso:
-//        URI url = uriComponentsBuilder.path("/users/{userId}").buildAndExpand(user.getUserId()).toUri();
-//
-//        // Retornar respuesta utilizando el constructor del DTO:
-//        return ResponseEntity.created(url).body(new DataResponseUser(user));
-//    }
-//}
-
 @RestController
 @RequestMapping("/users")
 @SecurityRequirement(name = "bearer-key")
@@ -55,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping
     public ResponseEntity<DataResponseUser> registerUser(
@@ -91,6 +63,10 @@ public class UserController {
         } else {
             user = new User(dataRegisterUser);
         }
+
+        // Hashear la contraseña:
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
         userRepository.save(user);
 
         // Construir URL del nuevo recurso:
