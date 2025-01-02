@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true)@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     @Autowired
@@ -34,6 +35,18 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers("/error")
                         .permitAll()
+                        // Rutas exclusivas para administradores:
+                        .requestMatchers(HttpMethod.PUT, "/topics/{topicId}/status")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/topics/**")
+                        .hasRole("ADMIN")
+                        // Rutas para usuarios con rol USER o ADMIN:
+                        .requestMatchers(HttpMethod.POST, "/topics", "/answers")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/topics/**", "/answers/**")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/topics", "/topics/**")
+                        .hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/swagger-ui.html",
                                 "/v3/api-docs/**", "/swagger-ui/**")
                         .permitAll()

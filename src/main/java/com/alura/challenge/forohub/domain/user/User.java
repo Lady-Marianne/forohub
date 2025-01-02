@@ -39,10 +39,12 @@ public class User implements UserDetails {
     @Column(nullable = false)
     protected Role role = Role.USER; // Valor por defecto es USER.
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,
+            fetch = FetchType.LAZY)
     private List<Topic> topics = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,
+            fetch = FetchType.LAZY)
     private List<Answer> answers = new ArrayList<>();
 
     public User(DataRegisterUser dataRegisterUser) {
@@ -53,7 +55,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE " + role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
@@ -92,7 +94,6 @@ public class User implements UserDetails {
                 "Id=" + userId +
                 ", Nombre='" + username + '\'' +
                 ", Correo electrónico='" + email + '\'' +
-                ", Contraseña='" + password + '\'' +
                 '}';
     }
 

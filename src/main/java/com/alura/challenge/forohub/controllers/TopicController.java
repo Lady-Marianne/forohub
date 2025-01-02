@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +79,7 @@ public class TopicController {
 
     // Mostrar los tópicos activos:
     @GetMapping
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Page<DataResponseTopic>> listActiveTopics(@PageableDefault(size = 10)
                                                                     Pageable pageable) {
         Page<Topic> topics = topicRepository.findByStatus(Status.ACTIVE, pageable);
@@ -102,8 +104,6 @@ public class TopicController {
     @Transactional
     public ResponseEntity<DataResponseTopic> updateTopicById(@PathVariable Long topicId,
                                                          @RequestBody DataUpdateTopic dataUpdateTopic) {
-
-
         try {
             Topic topic = topicRepository.getReferenceById(dataUpdateTopic.topicId());
             businessRulesService.validateEditTime(topic.getCreatedAt());
