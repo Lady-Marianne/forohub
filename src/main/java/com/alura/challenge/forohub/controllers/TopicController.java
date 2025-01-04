@@ -38,8 +38,10 @@ public class TopicController {
     @Autowired
     private BusinessRulesService businessRulesService;
 
-    // Registrar nuevo tópico:
+    @Autowired
+    private ResourceService resourceService;
 
+    // Registrar nuevo tópico:
     @PostMapping
     public ResponseEntity<DataResponseTopic> registerTopic(
             @RequestBody @Valid DataRegisterTopic dataRegisterTopic,
@@ -56,18 +58,11 @@ public class TopicController {
             throw new ValidationException("Ya existe un tópico con el mismo título y mensaje.");
         }
 
-        // Obtener el usuario autenticado desde el contexto de seguridad:
-        UserDetails userDetails = (UserDetails) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
-        String username = userDetails.getUsername();
-
-        // Buscar el usuario autenticado en la base de datos:
-        User user = (User) userRepository.findByUsername(username);
+        // Obtener usuario autenticado:
+        User user = resourceService.getAuthenticatedUser();
 
         // Crear y guardar el tópico:
-        Topic topic = new Topic(dataRegisterTopic, username);
+        Topic topic = new Topic(dataRegisterTopic, user.getUsername());
         topic.setUser(user); // Asigna el usuario autenticado al tópico.
         topic = topicRepository.save(topic);
 
@@ -118,7 +113,7 @@ public class TopicController {
         }
     }
 
-    // Eliminar un tópico. Los tópicos que no cumplean con las reglas del foro, serán
+    // Eliminar un tópico. Los tópicos que no cumplen con las reglas del foro, serán
     // eliminados de manera "lógica" por los administradores cambiando su status a
     // "DELETED" (eliminado):
     @DeleteMapping("/{topicId}")

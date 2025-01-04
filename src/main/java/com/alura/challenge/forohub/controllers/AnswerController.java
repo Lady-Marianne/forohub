@@ -43,16 +43,16 @@ public class AnswerController {
     @Autowired
     private BusinessRulesService businessRulesService;
 
-    // Registrar nueva respuesta:
+    @Autowired
+    private ResourceService resourceService;
 
+    // Registrar nueva respuesta:
     @PostMapping
     public ResponseEntity<DataResponseAnswer> registerAnswer(
             @RequestBody @Valid DataRegisterAnswer dataRegisterAnswer,
             UriComponentsBuilder uriComponentsBuilder) {
 
         businessRulesService.validatePostingTime();
-
-
 
         // Verificar si el tópico existe en la base de datos,
         // buscando por el ID:
@@ -65,20 +65,13 @@ public class AnswerController {
             throw new ValidationException("No se puede responder a un tópico que no está activo.");
         }
 
-        // Obtener el usuario autenticado desde el contexto de seguridad:
-        UserDetails userDetails = (UserDetails) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
-        String username = userDetails.getUsername();
+        // Obtener usuario autenticado:
+        User user = resourceService.getAuthenticatedUser();
 
-        // Buscar el usuario autenticado en la base de datos:
-        User user = (User) userRepository.findByUsername(username);
-
-// Crear y guardar la respuesta:
+        // Crear y guardar la respuesta:
         Answer answer = new Answer(
                 dataRegisterAnswer,  // Usamos el DTO.
-                username,  // El autor de la respuesta es el usuario logueado.
+                user.getUsername(),  // El autor de la respuesta es el usuario logueado.
                 existingTopic.get()  // Aquí se pasa el tópico entero, no solo el título.
         );
 
