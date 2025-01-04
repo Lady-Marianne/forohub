@@ -94,38 +94,13 @@ Usuarios y contraseñas:
 "password": "999999"
 }
 ]
-
+{
+"username": "Jorge Admin",
+"email": "jorgeadmin@forohub.com",
+"password": "999999"
+}
 set JWT_SECRET_FOROHUB=clavesecreta123
 mvn spring-boot:run
-
-SECURITY CONFIGURATION:
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(csrf -> csrf.disable())
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST,"/login")
-                        .permitAll()
-                       .requestMatchers(HttpMethod.DELETE, "/topics").hasRole("ADMIN")
-                       .requestMatchers("/error")
-                       .permitAll()
-/                     .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**")
-.permitAll()
-.anyRequest()
-.authenticated())
-.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
-return httpSecurity.build();
-}
-
-SECURITY FILTER:
-
-        String requestPath = request.getRequestURI();
-        if (requestPath.equals("/login")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
 Para saber más: control de acceso a anotaciones
 

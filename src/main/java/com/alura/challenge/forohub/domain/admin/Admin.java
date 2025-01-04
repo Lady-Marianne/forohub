@@ -15,7 +15,8 @@ import lombok.experimental.SuperBuilder;
 @RequiredArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-@PrimaryKeyJoinColumn(name = "user_id") // Establece que 'user_id'
+@PrimaryKeyJoinColumn(name = "user_id")
+// Establece que 'user_id'
 // en Admin es clave foránea para 'users'.
 public class Admin extends User {
 

@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +80,7 @@ public class TopicController {
 
     // Mostrar los tópicos activos:
     @GetMapping
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Page<DataResponseTopic>> listActiveTopics(@PageableDefault(size = 10)
                                                                     Pageable pageable) {
         Page<Topic> topics = topicRepository.findByStatus(Status.ACTIVE, pageable);
@@ -102,8 +105,6 @@ public class TopicController {
     @Transactional
     public ResponseEntity<DataResponseTopic> updateTopicById(@PathVariable Long topicId,
                                                          @RequestBody DataUpdateTopic dataUpdateTopic) {
-
-
         try {
             Topic topic = topicRepository.getReferenceById(dataUpdateTopic.topicId());
             businessRulesService.validateEditTime(topic.getCreatedAt());
@@ -121,6 +122,7 @@ public class TopicController {
     // eliminados de manera "lógica" por los administradores cambiando su status a
     // "DELETED" (eliminado):
     @DeleteMapping("/{topicId}")
+    @Secured("ROLE_ADMIN")
     @Transactional
     public ResponseEntity deleteTopicById(@PathVariable Long topicId) {
         Topic topic = topicRepository.getReferenceById(topicId);
@@ -132,6 +134,7 @@ public class TopicController {
     // Si el tópico cumple con las reglas del foro, los administradores lo aprueban y cambian
     // su status a "ACTIVE" (activo):
     @PutMapping("/{topicId}/status")
+    @Secured("ROLE_ADMIN")
     @Transactional
     public ResponseEntity approveTopicById(@PathVariable Long topicId) {
         Topic topic = topicRepository.getReferenceById(topicId);
