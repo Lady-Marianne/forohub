@@ -13,6 +13,7 @@ import java.util.List;
 @Entity(name = "Topic")
 @Table(name = "topics")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "topicId")
