@@ -18,6 +18,5 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     Page<Topic> findByStatus(Status status, Pageable pageable);
 
     Optional<Topic> findByTitleAndMessage(String title, String message);
-//    List<Topic> findByUser(User user);
 
 }
