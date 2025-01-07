@@ -1,5 +1,7 @@
 package com.alura.challenge.forohub.controllers;
 
+import com.alura.challenge.forohub.domain.course.Course;
+import com.alura.challenge.forohub.domain.course.CourseRepository;
 import com.alura.challenge.forohub.infra.business.BusinessRulesService;
 import com.alura.challenge.forohub.infra.exceptions.ValidationException;
 import com.alura.challenge.forohub.domain.topic.*;
@@ -36,6 +38,9 @@ public class TopicController {
     private UserRepository userRepository;
 
     @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
     private BusinessRulesService businessRulesService;
 
     @Autowired
@@ -57,6 +62,9 @@ public class TopicController {
         if (existingTopic.isPresent()) {
             throw new ValidationException("Ya existe un tópico con el mismo título y mensaje.");
         }
+        // Buscar el curso por ID:
+        Course course = courseRepository.findById(dataRegisterTopic.courseId())
+                .orElseThrow(() -> new ValidationException("El curso especificado no existe."));
 
         // Obtener usuario autenticado:
         User user = resourceService.getAuthenticatedUser();
@@ -64,6 +72,11 @@ public class TopicController {
         // Crear y guardar el tópico:
         Topic topic = new Topic(dataRegisterTopic, user.getUsername());
         topic.setUser(user); // Asigna el usuario autenticado al tópico.
+        topic.setOneCourse(course);
+
+        // Asignar el nombre del curso al campo 'course' (String):
+        topic.setCourse(course.getName());
+
         topic = topicRepository.save(topic);
 
         // Construir URL del nuevo recurso:
@@ -75,7 +88,6 @@ public class TopicController {
 
     // Mostrar los tópicos activos:
     @GetMapping
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Page<DataResponseTopic>> listActiveTopics(@PageableDefault(size = 10)
                                                                     Pageable pageable) {
         Page<Topic> topics = topicRepository.findByStatus(Status.ACTIVE, pageable);
@@ -99,7 +111,7 @@ public class TopicController {
     @PutMapping("/{topicId}")
     @Transactional
     public ResponseEntity<DataResponseTopic> updateTopicById(@PathVariable Long topicId,
-                                                         @RequestBody DataUpdateTopic dataUpdateTopic) {
+                                                             @RequestBody DataUpdateTopic dataUpdateTopic) {
         try {
             Topic topic = topicRepository.getReferenceById(dataUpdateTopic.topicId());
             businessRulesService.validateEditTime(topic.getCreatedAt());

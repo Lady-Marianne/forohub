@@ -1,11 +1,9 @@
 package com.alura.challenge.forohub.domain.course;
 
-import com.alura.challenge.forohub.domain.answer.DataRegisterAnswer;
 import com.alura.challenge.forohub.domain.topic.Topic;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity(name = "Course")

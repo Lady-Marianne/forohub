@@ -59,8 +59,6 @@ public class Topic {
         this.title = dataRegisterTopic.title();
         this.message = dataRegisterTopic.message();
         this.author = username;
-        this.course = oneCourse.getName();  // Asigna el nombre del curso al campo 'course' (String).
-//        this.oneCourse = oneCourse;  // Relaciona con el objeto Course.
         this.createdAt = LocalDateTime.now(); // Asigna la fecha actual.
         this.status = Status.PENDING; // Estado inicial.
     }

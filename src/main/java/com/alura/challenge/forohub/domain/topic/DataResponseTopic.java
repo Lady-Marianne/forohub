@@ -19,6 +19,7 @@ public record DataResponseTopic(
         String status,
         Long userId,
         String author,
+        Long courseId,
         String course
 
 ) {
@@ -33,7 +34,8 @@ public record DataResponseTopic(
                         topic.getStatus().toString(),
                         topic.getUser().getUserId(), // <-- Obtenemos el userId desde la entidad User.
                         topic.getAuthor(),
-                        topic.getCourse()
+                        topic.getOneCourse().getCourseId(), // <-- Obtenemos el id desde la entidad Course.
+                        topic.getOneCourse().getName()
                 );
     }
 

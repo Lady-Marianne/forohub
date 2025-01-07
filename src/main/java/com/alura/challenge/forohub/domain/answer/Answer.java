@@ -46,10 +46,10 @@ public class Answer {
 
     public Answer(DataRegisterAnswer dataRegisterAnswer, String username, Topic topic) {
         this.message = dataRegisterAnswer.message();
-        this.topic = topic.getTitle(); // Usamos el título del tópico
+        this.topic = topic.getTitle(); // Usamos el título del tópico.
         this.createdAt = LocalDateTime.now();
         this.author = username;
-        this.solution = dataRegisterAnswer.solution(); // Si se recibe 'solution' en el DTO
+        this.solution = dataRegisterAnswer.solution(); // Si se recibe 'solution' en el DTO.
         this.oneTopic = topic; // Asignamos el tópico a la respuesta.
     }
 
