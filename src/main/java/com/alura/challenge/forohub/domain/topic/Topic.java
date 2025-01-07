@@ -1,6 +1,7 @@
 package com.alura.challenge.forohub.domain.topic;
 
 import com.alura.challenge.forohub.domain.answer.Answer;
+import com.alura.challenge.forohub.domain.course.Course;
 import com.alura.challenge.forohub.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -46,6 +47,11 @@ public class Topic {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", referencedColumnName = "course_id", nullable = false)
+    private Course oneCourse;
+
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers = new ArrayList<>();
 
@@ -53,7 +59,8 @@ public class Topic {
         this.title = dataRegisterTopic.title();
         this.message = dataRegisterTopic.message();
         this.author = username;
-        this.course = dataRegisterTopic.course();
+        this.course = oneCourse.getName();  // Asigna el nombre del curso al campo 'course' (String).
+//        this.oneCourse = oneCourse;  // Relaciona con el objeto Course.
         this.createdAt = LocalDateTime.now(); // Asigna la fecha actual.
         this.status = Status.PENDING; // Estado inicial.
     }

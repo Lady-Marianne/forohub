@@ -6,8 +6,8 @@ public record DataRegisterTopic(
         @NotBlank
         String title,
         @NotBlank
-        String message,
-        @NotBlank
-        String course
+        String message
+//        @NotBlank
+//        String course
 ) {
 }
