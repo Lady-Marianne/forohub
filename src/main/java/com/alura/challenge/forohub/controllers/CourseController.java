@@ -4,6 +4,8 @@ import com.alura.challenge.forohub.domain.course.Course;
 import com.alura.challenge.forohub.domain.course.CourseRepository;
 import com.alura.challenge.forohub.domain.course.DataRegisterCourse;
 import com.alura.challenge.forohub.domain.course.DataResponseCourse;
+import com.alura.challenge.forohub.domain.topic.Topic;
+import com.alura.challenge.forohub.infra.exceptions.ValidationException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/courses")
@@ -31,6 +34,12 @@ public class CourseController {
     public ResponseEntity<DataResponseCourse> registerCourse
             (@RequestBody @Validated DataRegisterCourse dataRegisterCourse,
              UriComponentsBuilder uriComponentsBuilder) {
+        // Verificar si el curso ya existe en la base de datos, buscando
+        // por nombre:
+        Optional<Course> existingCourse = courseRepository.findByName(dataRegisterCourse.name());
+        if (existingCourse.isPresent()) {
+            throw new ValidationException("Ya existe ese curso en la base de datos.");
+        }
         // Crear el curso a partir de los datos recibidos:
         Course course = new Course(dataRegisterCourse);
         // Guardar el curso en la base de datos:
