@@ -1,9 +1,11 @@
 package com.alura.challenge.forohub.domain.course;
 
+import com.alura.challenge.forohub.domain.answer.DataRegisterAnswer;
 import com.alura.challenge.forohub.domain.topic.Topic;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity(name = "Course")
@@ -29,4 +31,9 @@ public class Course {
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Topic> topics;
+
+    public Course(DataRegisterCourse dataRegisterCourse) {
+     this.name = dataRegisterCourse.name();
+     this.category = dataRegisterCourse.category();
+    }
 }

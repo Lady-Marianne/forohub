@@ -41,6 +41,8 @@ public class SecurityConfiguration {
                         .hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/topics/**")
                         .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/courses")
+                        .hasRole("ADMIN")
                         // Rutas para usuarios con rol USER o ADMIN:
                         .requestMatchers(HttpMethod.POST, "/topics", "/answers")
                         .hasAnyRole("USER", "ADMIN")
