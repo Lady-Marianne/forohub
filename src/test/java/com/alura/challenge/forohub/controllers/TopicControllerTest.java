@@ -1,5 +1,6 @@
 package com.alura.challenge.forohub.controllers;
 
+import com.alura.challenge.forohub.domain.course.Course;
 import com.alura.challenge.forohub.domain.topic.DataRegisterTopic;
 import com.alura.challenge.forohub.domain.topic.DataResponseTopic;
 import com.alura.challenge.forohub.domain.topic.Topic;
@@ -59,47 +60,63 @@ class TopicControllerTest {
                 .isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-//    @Test
-//    @DisplayName("Debería devolver código http 201 cuando la información es válida.")
-//    @WithMockUser
-//    void registerTopic_validData() throws Exception {
-//        var dataRegisterTopic = new DataRegisterTopic(
-//                1L,
-//                "Título de prueba",
-//                "Mensaje de prueba");
-//
-//        User mockUser = new User();
-//        mockUser.setUserId(1L);
-//        mockUser.setUsername("usuarioPrueba");
-//
-//        Topic savedTopic = new Topic(dataRegisterTopic, mockUser.getUsername());
-//        savedTopic.setTopicId(1L);
-//        savedTopic.setUser(mockUser);
-//
-//        when(topicRepository.save(any())).thenReturn(savedTopic);
-//        when(resourceService.getAuthenticatedUser()).thenReturn(mockUser);
-//
-//        var response = mvc
-//                .perform(post("/topics")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(dataRegisterTopicJson.write(dataRegisterTopic).getJson()))
-//                .andReturn().getResponse();
-//
-//        var jsonExpected = dataResponseTopicJson.write(
-//                new DataResponseTopic(
-//                        savedTopic.getTopicId(),
-//                        savedTopic.getTitle(),
-//                        savedTopic.getMessage(),
-//                        savedTopic.getCreatedAt().toString(),
-//                        savedTopic.getStatus().toString(),
-//                        savedTopic.getUser().getUserId(),
-//                        savedTopic.getAuthor(),
-//                        savedTopic.getCourse()
-//                )
-//        ).getJson();
-//
-//        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-//        assertThat(response.getContentAsString()).isEqualTo(jsonExpected);
-//    }
+    @Test
+    @DisplayName("Debería devolver código http 201 cuando la información es válida.")
+    @WithMockUser
+    void registerTopic_validData() throws Exception {
+        var dataRegisterTopic = new DataRegisterTopic(
+                1L,
+                "Título de prueba",
+                "Mensaje de prueba");
+
+        // Mock de usuario autenticado:
+        User mockUser = new User();
+        mockUser.setUserId(1L);
+        mockUser.setUsername("Usuario de prueba");
+
+        // Mock del curso:
+        Course mockCourse = new Course();
+        mockCourse.setCourseId(1L);
+        mockCourse.setName("Curso de prueba");
+
+        Topic savedTopic = new Topic(dataRegisterTopic, mockUser.getUsername());
+        savedTopic.setTopicId(1L);
+        savedTopic.setUser(mockUser);
+        savedTopic.setOneCourse(mockCourse); // Asociar el curso al tópico.
+
+        when(userRepository.findById(1L))
+                .thenReturn(java.util.Optional.of(mockUser));
+
+        when(topicRepository.save(any()))
+                .thenReturn(savedTopic);
+        when(resourceService
+                .getAuthenticatedUser())
+                .thenReturn(mockUser);
+
+        var response = mvc
+                .perform(post("/topics")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dataRegisterTopicJson
+                                .write(dataRegisterTopic)
+                                .getJson()))
+                .andReturn()
+                .getResponse();
+
+        var jsonExpected = dataResponseTopicJson.write(
+                new DataResponseTopic(
+                        savedTopic.getTopicId(),
+                        savedTopic.getTitle(),
+                        savedTopic.getMessage(),
+                        savedTopic.getCreatedAt().toString(),
+                        savedTopic.getStatus().toString(),
+                        savedTopic.getUser().getUserId(),
+                        savedTopic.getAuthor(),
+                        savedTopic.getOneCourse().getCourseId(),
+                        savedTopic.getOneCourse().getName()                )
+        ).getJson();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.getContentAsString()).isEqualTo(jsonExpected);
+    }
 
 }
