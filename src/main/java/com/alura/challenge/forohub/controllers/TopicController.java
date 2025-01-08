@@ -113,11 +113,24 @@ public class TopicController {
     public ResponseEntity<DataResponseTopic> updateTopicById(@PathVariable Long topicId,
                                                              @RequestBody DataUpdateTopic dataUpdateTopic) {
         try {
+
+            // Obtener el usuario autenticado:
+            User user = resourceService.getAuthenticatedUser();
+
             Topic topic = topicRepository.getReferenceById(dataUpdateTopic.topicId());
+
+            // Validar que el usuario autenticado sea el autor del tópico:
+            if (!topic.getAuthor().equals(user.getUsername())) {
+                throw new SecurityException("No tiene permiso para editar este tópico.");
+            }
+
             businessRulesService.validateEditTime(topic.getCreatedAt());
+
             topic.updateTopic(dataUpdateTopic);
+
             // Guardamos el tópico actualizado:
             topicRepository.save(topic);
+
             // Devolvemos la respuesta con el DTO actualizado:
             return ResponseEntity.ok(new DataResponseTopic(topic));
         } catch (EntityNotFoundException e) {
