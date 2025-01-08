@@ -34,7 +34,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         try {
             // Obtener el token del header:
             var authHeader = request.getHeader("Authorization");
-//        if (authHeader != null) {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 var token = authHeader.replace("Bearer ", "");
                 var subject = tokenService.getSubject(token); // Extraer username.
@@ -44,7 +43,8 @@ public class SecurityFilter extends OncePerRequestFilter {
                     List<SimpleGrantedAuthority> roles = tokenService.getRoles(token).stream()
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
-                    var authentication = new UsernamePasswordAuthenticationToken(user, null, roles);
+                    var authentication = new UsernamePasswordAuthenticationToken
+                            (user, null, roles);
                     user.getAuthorities(); // Forzamos un inicio de sesión.
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     log.info("Usuario autenticado: {}", subject);

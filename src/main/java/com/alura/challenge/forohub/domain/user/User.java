@@ -33,6 +33,7 @@ public class User implements UserDetails {
     private String username;
 
     private String email;
+
     @Setter
     private String password;
 
@@ -89,13 +90,13 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "Id=" + userId +
-                ", Nombre='" + username + '\'' +
-                ", Correo electrónico='" + email + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "Id=" + userId +
+//                ", Nombre='" + username + '\'' +
+//                ", Correo electrónico='" + email + '\'' +
+//                '}';
+//    }
 
 }

@@ -76,7 +76,7 @@ public class TokenService {
         }
 
         try {
-            Algorithm algorithm = Algorithm.HMAC256(forohubSecret); // Usa tu clave secreta
+            Algorithm algorithm = Algorithm.HMAC256(forohubSecret); // Usa tu clave secreta.
             DecodedJWT decodedJWT = JWT.require(algorithm)
                     .withIssuer("forohub")
                     .build()
