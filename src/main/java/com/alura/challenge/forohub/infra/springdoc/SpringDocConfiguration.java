@@ -34,6 +34,4 @@ public class SpringDocConfiguration {
                                 .url("http://forohub.com/api/licencia")));
 
     }
-
-
 }
