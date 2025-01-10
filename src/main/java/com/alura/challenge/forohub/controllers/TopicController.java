@@ -7,6 +7,7 @@ import com.alura.challenge.forohub.infra.exceptions.ValidationException;
 import com.alura.challenge.forohub.domain.topic.*;
 import com.alura.challenge.forohub.domain.user.User;
 import com.alura.challenge.forohub.domain.user.UserRepository;
+import com.alura.challenge.forohub.infra.openia.ModerationService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -46,6 +47,9 @@ public class TopicController {
     @Autowired
     private ResourceService resourceService;
 
+    @Autowired
+    private ModerationService moderationService;
+
     // Registrar nuevo tópico:
     @PostMapping
     public ResponseEntity<DataResponseTopic> registerTopic(
@@ -76,6 +80,15 @@ public class TopicController {
 
         // Asignar el nombre del curso al campo 'course' (String):
         topic.setCourse(course.getName());
+
+        // Llamar a la moderación del contenido:
+        boolean isValid = moderationService.moderateTopic(dataRegisterTopic.title(),
+                dataRegisterTopic.message());
+        if (isValid) {
+            topic.approveTopic(); // Cambiar estado a "ACTIVE".
+        } else {
+            topic.deleteTopic(); // Cambiar estado a "DELETED".
+        }
 
         topic = topicRepository.save(topic);
 

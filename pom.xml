@@ -103,13 +103,11 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.8.1</version>
 		</dependency>
-		<!-- Simple OpenAI de Estela Sashir: -->
-		<dependency>
-			<groupId>io.github.sashirestela</groupId>
-			<artifactId>simple-openai</artifactId>
-			<version>3.14.0</version>
-		</dependency>
 		<!-- SpringAI con OpenAI: -->
+		<dependency>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-openai</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
 			<artifactId>spring-ai-openai-spring-boot-starter</artifactId>
