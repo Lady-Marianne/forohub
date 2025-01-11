@@ -89,7 +89,7 @@ public class TopicController {
         } else {
             topic.deleteTopic(); // Cambiar estado a "DELETED".
         }
-
+        System.out.println("Resultado de la moderación: " + isValid);
         topic = topicRepository.save(topic);
 
         // Construir URL del nuevo recurso:

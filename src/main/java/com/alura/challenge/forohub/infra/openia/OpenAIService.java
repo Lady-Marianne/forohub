@@ -20,8 +20,10 @@ public class OpenAIService {
 
         // Crear el mensaje de entrada:
         OpenAiApi.ChatCompletionMessage chatCompletionMessage =
-                new OpenAiApi.ChatCompletionMessage(prompt,
-                OpenAiApi.ChatCompletionMessage.Role.USER);
+                new OpenAiApi.ChatCompletionMessage(
+                        prompt,
+                        OpenAiApi.ChatCompletionMessage.Role.USER
+                );
 
         // Crear la solicitud a OpenAI con el modelo y los parámetros:
         OpenAiApi.ChatCompletionRequest request = new OpenAiApi.ChatCompletionRequest(
@@ -38,14 +40,22 @@ public class OpenAIService {
         OpenAiApi.ChatCompletion chatCompletion = response.getBody();
 
         // Verificar si la respuesta es válida:
-        if (chatCompletion != null) {
-            // Aquí exploramos la respuesta para ver qué contiene.
-            // Imprimimos el contenido de la respuesta para inspeccionarlo:
-            System.out.println("Respuesta completa: " + chatCompletion.toString());
-            return chatCompletion.toString();  // Ver qué contiene la respuesta completa.
-        } else {
-            return "Error: No se recibió respuesta válida.";
-        }
+//        if (chatCompletion != null) {
+//            // Aquí exploramos la respuesta para ver qué contiene.
+//            // Imprimimos el contenido de la respuesta para inspeccionarlo:
+//            System.out.println("Respuesta completa: " + chatCompletion.toString());
+//            return chatCompletion.toString();  // Ver qué contiene la respuesta completa.
+//        } else {
+//            return "Error: No se recibió respuesta válida.";
+//        }
 
+        if ((chatCompletion != null) && (chatCompletion.choices() != null)) {
+            // Extraer contenido del primer choice
+            String content = chatCompletion.choices().get(0).message().content();
+            System.out.println("Contenido del modelo: " + content);
+            return content.trim();  // Retorna el contenido procesado.
+        } else {
+            return "Error: No se recibió respuesta válida de OpenAI.";
+        }
     }
 }
