@@ -66,6 +66,7 @@ public class TopicController {
         if (existingTopic.isPresent()) {
             throw new ValidationException("Ya existe un tópico con el mismo título y mensaje.");
         }
+
         // Buscar el curso por ID:
         Course course = courseRepository.findById(dataRegisterTopic.courseId())
                 .orElseThrow(() -> new ValidationException("El curso especificado no existe."));
@@ -73,11 +74,10 @@ public class TopicController {
         // Obtener usuario autenticado:
         User user = resourceService.getAuthenticatedUser();
 
-        // Crear y guardar el tópico:
+        // Crear el tópico:
         Topic topic = new Topic(dataRegisterTopic, user.getUsername());
         topic.setUser(user); // Asigna el usuario autenticado al tópico.
         topic.setOneCourse(course);
-
         // Asignar el nombre del curso al campo 'course' (String):
         topic.setCourse(course.getName());
 

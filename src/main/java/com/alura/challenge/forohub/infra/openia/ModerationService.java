@@ -19,6 +19,7 @@ public class ModerationService {
         """.formatted(title, message);
 
         String response = openAIService.moderateContent(prompt);
+        System.out.println("Respuesta de OpenAI: " + response);
         return response.equalsIgnoreCase("CUMPLE");
     }
 
