@@ -39,19 +39,12 @@ public class OpenAIService {
         // Obtener la respuesta:
         OpenAiApi.ChatCompletion chatCompletion = response.getBody();
 
-        // Verificar si la respuesta es válida:
-//        if (chatCompletion != null) {
-//            // Aquí exploramos la respuesta para ver qué contiene.
-//            // Imprimimos el contenido de la respuesta para inspeccionarlo:
-//            System.out.println("Respuesta completa: " + chatCompletion.toString());
-//            return chatCompletion.toString();  // Ver qué contiene la respuesta completa.
-//        } else {
-//            return "Error: No se recibió respuesta válida.";
-//        }
-
+    // Verificar si la respuesta es válida y extraer el contenido:
         if ((chatCompletion != null) && (chatCompletion.choices() != null)) {
-            // Extraer contenido del primer choice
+            // Extraer contenido del primer choice:
             String content = chatCompletion.choices().get(0).message().content();
+            // Aquí exploramos la respuesta para ver qué contiene.
+            // Imprimimos el contenido de la respuesta para inspeccionarlo:
             System.out.println("Contenido del modelo: " + content);
             return content.trim();  // Retorna el contenido procesado.
         } else {

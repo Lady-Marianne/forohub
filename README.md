@@ -40,6 +40,65 @@ La API está protegida mediante autenticación basada en JWT.
 2. **Tiempo para editar tópicos**: Los tópicos sólo se pueden editar dentro de la primera hora 
 después de su creación.
 
+### Integración con OpenAI usando SpringAI para moderar contenido:
+
+En el proyecto ForoHub, hemos implementado una integración con OpenAI para moderar los contenidos 
+generados por los usuarios antes de que se almacenen en la base de datos. Este sistema asegura que los 
+tópicos creados cumplan con las reglas del foro, promoviendo un ambiente respetuoso y relevante para 
+todos los participantes.
+
+#### Objetivo de la moderación:
+El objetivo principal de esta funcionalidad es validar que:
+
+1. **No se publiquen contenidos discriminatorios, ofensivos o insultantes**: Por ejemplo, mensajes que 
+2. fomenten estereotipos o ataquen a personas por su género, etnia, religión u otras características
+3. personales.
+2. **El contenido sea relevante para las temáticas del foro**: ForoHub está enfocado en temas 
+3. relacionados con desarrollo backend y frontend, DevOps, bases de datos e ingeniería de software. 
+4. Mensajes fuera de estas áreas serán rechazados.
+
+#### Cómo funciona la integración:
+1. **Creación del prompt**: Cuando un usuario intenta registrar un tópico, el sistema genera un prompt
+2. que describe las reglas del foro y presenta el contenido del tópico (título y mensaje) como texto a
+3. evaluar.
+
+2. **Consulta al modelo de OpenAI**: El servicio `ModerationService` envía el prompt al modelo de
+3. lenguaje de OpenAI utilizando la dependencia `SpringAI` para realizar una solicitud al API.
+
+3. **Evaluación del contenido**: OpenAI responde con un veredicto: “CUMPLE” o “NO CUMPLE”, indicando 
+4. si el contenido respeta las reglas establecidas.
+
+4. **Decisión basada en el resultado**:
+    - Si el contenido “CUMPLE” con las reglas, el estado del tópico cambia a **ACTIVE** (activo).
+    - Si el contenido “NO CUMPLE”, el estado del tópico cambia a **DELETED** (eliminado) para evitar 
+   su publicación.
+
+#### Código involucrado:
+
+1. **Clase `ModerationService`**: Contiene la lógica principal para interactuar con el modelo de OpenAI,
+2. enviar el prompt y procesar la respuesta.
+
+2. **Clase `OpenAIService`**: Define la configuración y la comunicación directa con la API de OpenAI, 
+3. utilizando el modelo `gpt-4o-mini` y configurando los parámetros necesarios para cada solicitud.
+
+3. **Clase `TopicController`**: Invoca la moderación desde el endpoint de creación de tópicos 
+4. (`registerTopic`) para determinar si el contenido es aceptable.
+
+#### Beneficios de la integración:
+- **Automatización**: La moderación automática ahorra tiempo al equipo administrativo del foro.
+- **Consistencia**: Se aplica un conjunto uniforme de reglas a todos los tópicos.
+- **Prevención proactiva**: Los contenidos inapropiados no llegan a ser publicados, manteniendo la 
+- calidad del foro.
+
+#### Mejoras futuras:
+Aunque la integración actual es funcional, planeamos mejorarla implementando:
+- **Retroalimentación al usuario**: Brindar mensajes claros sobre qué reglas fueron violadas en caso
+- de que el contenido no cumpla.
+- **Moderación de respuestas**: Extender la funcionalidad para validar también los mensajes publicados
+- como respuestas.
+
+Con esta implementación, ForoHub se asegura de ofrecer un espacio seguro y útil para su comunidad técnica.
+
 ## Tecnologías:
 
 - **Backend**: Spring Boot 2.x, Spring Security, JPA, JWT.
