@@ -1,4 +1,5 @@
 # ForoHub API
+# Desarrollado por: Mariana Andrea Lois (Lady Marianne).
 
 ForoHub es un foro para discutir sobre diferentes tópicos relacionados con el desarrollo BackEnd.
 Los usuarios pueden crear tópicos, responder a ellos, y editar sus respuestas dentro de un marco de 
@@ -85,6 +86,7 @@ utilizando el modelo `gpt-4o-mini` y configurando los parámetros necesarios par
 (`registerTopic`) para determinar si el contenido es aceptable.
 
 #### Beneficios de la integración:
+
 - **Automatización**: La moderación automática ahorra tiempo al equipo administrativo del foro.
 - **Consistencia**: Se aplica un conjunto uniforme de reglas a todos los tópicos.
 - **Prevención proactiva**: Los contenidos inapropiados no llegan a ser publicados, manteniendo la 
