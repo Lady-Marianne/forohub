@@ -51,11 +51,11 @@ todos los participantes.
 El objetivo principal de esta funcionalidad es validar que:
 
 1. **No se publiquen contenidos discriminatorios, ofensivos o insultantes**: Por ejemplo, mensajes que 
-2. fomenten estereotipos o ataquen a personas por su género, etnia, religión u otras características
-3. personales.
+fomenten estereotipos o ataquen a personas por su género, etnia, religión u otras características 
+personales.
 2. **El contenido sea relevante para las temáticas del foro**: ForoHub está enfocado en temas 
-3. relacionados con desarrollo backend y frontend, DevOps, bases de datos e ingeniería de software. 
-4. Mensajes fuera de estas áreas serán rechazados.
+relacionados con desarrollo backend y frontend, DevOps, bases de datos e ingeniería de software. 
+Mensajes fuera de estas áreas serán rechazados.
 
 #### Cómo funciona la integración:
 1. **Creación del prompt**: Cuando un usuario intenta registrar un tópico, el sistema genera un prompt
