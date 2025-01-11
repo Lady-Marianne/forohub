@@ -59,14 +59,14 @@ Mensajes fuera de estas áreas serán rechazados.
 
 #### Cómo funciona la integración:
 1. **Creación del prompt**: Cuando un usuario intenta registrar un tópico, el sistema genera un prompt
-2. que describe las reglas del foro y presenta el contenido del tópico (título y mensaje) como texto a
-3. evaluar.
+que describe las reglas del foro y presenta el contenido del tópico (título y mensaje) como texto a
+evaluar.
 
 2. **Consulta al modelo de OpenAI**: El servicio `ModerationService` envía el prompt al modelo de
-3. lenguaje de OpenAI utilizando la dependencia `SpringAI` para realizar una solicitud al API.
+lenguaje de OpenAI utilizando la dependencia `SpringAI` para realizar una solicitud al API.
 
 3. **Evaluación del contenido**: OpenAI responde con un veredicto: “CUMPLE” o “NO CUMPLE”, indicando 
-4. si el contenido respeta las reglas establecidas.
+si el contenido respeta las reglas establecidas.
 
 4. **Decisión basada en el resultado**:
     - Si el contenido “CUMPLE” con las reglas, el estado del tópico cambia a **ACTIVE** (activo).
@@ -76,26 +76,26 @@ Mensajes fuera de estas áreas serán rechazados.
 #### Código involucrado:
 
 1. **Clase `ModerationService`**: Contiene la lógica principal para interactuar con el modelo de OpenAI,
-2. enviar el prompt y procesar la respuesta.
+enviar el prompt y procesar la respuesta.
 
 2. **Clase `OpenAIService`**: Define la configuración y la comunicación directa con la API de OpenAI, 
-3. utilizando el modelo `gpt-4o-mini` y configurando los parámetros necesarios para cada solicitud.
+utilizando el modelo `gpt-4o-mini` y configurando los parámetros necesarios para cada solicitud.
 
 3. **Clase `TopicController`**: Invoca la moderación desde el endpoint de creación de tópicos 
-4. (`registerTopic`) para determinar si el contenido es aceptable.
+(`registerTopic`) para determinar si el contenido es aceptable.
 
 #### Beneficios de la integración:
 - **Automatización**: La moderación automática ahorra tiempo al equipo administrativo del foro.
 - **Consistencia**: Se aplica un conjunto uniforme de reglas a todos los tópicos.
 - **Prevención proactiva**: Los contenidos inapropiados no llegan a ser publicados, manteniendo la 
-- calidad del foro.
+calidad del foro.
 
 #### Mejoras futuras:
 Aunque la integración actual es funcional, planeamos mejorarla implementando:
 - **Retroalimentación al usuario**: Brindar mensajes claros sobre qué reglas fueron violadas en caso
-- de que el contenido no cumpla.
+de que el contenido no cumpla.
 - **Moderación de respuestas**: Extender la funcionalidad para validar también los mensajes publicados
-- como respuestas.
+como respuestas.
 
 Con esta implementación, ForoHub se asegura de ofrecer un espacio seguro y útil para su comunidad técnica.
 
