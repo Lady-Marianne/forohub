@@ -20,7 +20,7 @@ La API está protegida mediante autenticación basada en JWT.
 
 ### Tópicos:
 - **POST /topics**: Crear un nuevo tópico.
-- **GET /topics**: Listar todos los tópicos.
+- **GET /topics**: Listar todos los tópicos activos.
 - **GET /topics/{id}**: Obtener detalles de un tópico específico.
 - **PUT /topics/{id}**: Editar un tópico.
 - **DELETE /topics/{id}**: Eliminar un tópico.
