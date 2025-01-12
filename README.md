@@ -1,7 +1,14 @@
 # ForoHub API
 # Desarrollado por: Mariana Andrea Lois (Lady Marianne).
 
-ForoHub es un foro para discutir sobre diferentes tópicos relacionados con el desarrollo BackEnd.
+ForoHub es un foro educativo para discutir y aprender sobre diferentes tópicos relacionados con 
+los siguientes temas:
+
+- Desarrollo backend y frontend.
+- DevOps.
+- Ingeniería de software.
+- Bases de datos.
+
 Los usuarios pueden crear tópicos, responder a ellos, y editar sus respuestas dentro de un marco de 
 reglas de tiempo específicas. La API está construida con **Spring Boot** 
 y utiliza JWT para su autenticación.
@@ -20,7 +27,7 @@ La API está protegida mediante autenticación basada en JWT.
 
 ### Tópicos:
 - **POST /topics**: Crear un nuevo tópico.
-- **GET /topics**: Listar todos los tópicos.
+- **GET /topics**: Listar todos los tópicos activos.
 - **GET /topics/{id}**: Obtener detalles de un tópico específico.
 - **PUT /topics/{id}**: Editar un tópico.
 - **DELETE /topics/{id}**: Eliminar un tópico.
