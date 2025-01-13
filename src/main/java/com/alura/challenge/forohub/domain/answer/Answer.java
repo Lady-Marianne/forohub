@@ -1,5 +1,6 @@
 package com.alura.challenge.forohub.domain.answer;
 
+import com.alura.challenge.forohub.domain.topic.DataUpdateTopic;
 import com.alura.challenge.forohub.domain.topic.Topic;
 import com.alura.challenge.forohub.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -51,6 +52,11 @@ public class Answer {
         this.author = username;
         this.solution = dataRegisterAnswer.solution(); // Si se recibe 'solution' en el DTO.
         this.oneTopic = topic; // Asignamos el tópico a la respuesta.
+    }
+
+    public void updateAnswer(DataUpdateAnswer dataUpdateAnswer) {
+        if (dataUpdateAnswer.message() != null)
+            this.message = dataUpdateAnswer.message();
     }
 
 }

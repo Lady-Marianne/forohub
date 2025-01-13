@@ -1,26 +1,23 @@
 package com.alura.challenge.forohub.controllers;
 
-import com.alura.challenge.forohub.domain.answer.Answer;
+import com.alura.challenge.forohub.domain.answer.*;
 import com.alura.challenge.forohub.domain.topic.DataResponseTopic;
+import com.alura.challenge.forohub.domain.topic.DataUpdateTopic;
 import com.alura.challenge.forohub.domain.user.User;
 import com.alura.challenge.forohub.infra.business.BusinessRulesService;
 import com.alura.challenge.forohub.infra.exceptions.ValidationException;
-import com.alura.challenge.forohub.domain.answer.AnswerRepository;
-import com.alura.challenge.forohub.domain.answer.DataRegisterAnswer;
-import com.alura.challenge.forohub.domain.answer.DataResponseAnswer;
 import com.alura.challenge.forohub.domain.topic.Topic;
 import com.alura.challenge.forohub.domain.topic.TopicRepository;
 import com.alura.challenge.forohub.domain.user.UserRepository;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -87,6 +84,38 @@ public class AnswerController {
 
         // Retornar respuesta con el nuevo recurso creado:
         return ResponseEntity.created(url).body(new DataResponseAnswer(answer));
+    }
+
+    // Actualizar una respuesta:
+    @PutMapping("/{answerId}")
+    @Transactional
+    public ResponseEntity<DataResponseAnswer> updateAnswerById(@PathVariable Long answerId,
+                                                             @RequestBody DataUpdateAnswer
+                                                                     dataUpdateAnswer) {
+        try {
+
+            // Obtener el usuario autenticado:
+            User user = resourceService.getAuthenticatedUser();
+
+            Answer answer = answerRepository.getReferenceById(answerId); // Usar el ID del PathVariable.
+
+            // Validar que el usuario autenticado sea el autor del tópico:
+            if (!answer.getAuthor().equals(user.getUsername())) {
+                throw new SecurityException("No tiene permiso para editar esta respuesta.");
+            }
+
+            businessRulesService.validateEditTime(answer.getCreatedAt());
+
+            answer.updateAnswer(dataUpdateAnswer);
+
+            // Guardamos el tópico actualizado:
+            answerRepository.save(answer);
+
+            // Devolvemos la respuesta con el DTO actualizado:
+            return ResponseEntity.ok(new DataResponseAnswer(answer));
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("La respuesta con id " + answerId + " no existe.");
+        }
     }
 
 }
