@@ -48,7 +48,8 @@ public class SecurityConfiguration {
                         .hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/topics/**", "/answers/**")
                         .hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/topics", "/topics/**")
+                        .requestMatchers(HttpMethod.GET, "/topics", "/topics/**",
+                                "/answers", "/answers/**", "/answers/{topicId}")
                         .hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/swagger-ui.html",
                                 "/v3/api-docs/**", "/swagger-ui/**")

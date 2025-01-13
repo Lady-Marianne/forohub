@@ -1,6 +1,6 @@
 package com.alura.challenge.forohub.domain.topic;
 
-import com.alura.challenge.forohub.domain.user.User;
+import com.alura.challenge.forohub.domain.answer.Answer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +19,6 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
     Optional<Topic> findByTitleAndMessage(String title, String message);
 
+    @Query("SELECT a FROM Answer a WHERE a.oneTopic.topicId = :topicId")
+    List<Answer> findAnswersByTopicId(@Param("topicId") Long topicId);
 }

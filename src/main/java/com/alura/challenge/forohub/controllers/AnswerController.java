@@ -1,26 +1,29 @@
 package com.alura.challenge.forohub.controllers;
 
 import com.alura.challenge.forohub.domain.answer.*;
-import com.alura.challenge.forohub.domain.topic.DataResponseTopic;
-import com.alura.challenge.forohub.domain.topic.DataUpdateTopic;
+import com.alura.challenge.forohub.domain.topic.*;
 import com.alura.challenge.forohub.domain.user.User;
 import com.alura.challenge.forohub.infra.business.BusinessRulesService;
 import com.alura.challenge.forohub.infra.exceptions.ValidationException;
-import com.alura.challenge.forohub.domain.topic.Topic;
-import com.alura.challenge.forohub.domain.topic.TopicRepository;
 import com.alura.challenge.forohub.domain.user.UserRepository;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -117,5 +120,15 @@ public class AnswerController {
             throw new EntityNotFoundException("La respuesta con id " + answerId + " no existe.");
         }
     }
+
+    @GetMapping
+    public ResponseEntity<List<DataResponseAnswer>> getAnswersByTopicId(@RequestParam Long topicId) {
+        List<Answer> answers = topicRepository.findAnswersByTopicId(topicId);
+        List<DataResponseAnswer> response = answers.stream()
+                .map(DataResponseAnswer::new)
+                .toList();
+        return ResponseEntity.ok(response);
+    }
+
 
 }
