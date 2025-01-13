@@ -79,5 +79,9 @@ public class Topic {
         this.status = Status.ACTIVE;
     }
 
+    public void closeTopic() {
+        this.status = Status.CLOSED;
+    }
+
 }
 

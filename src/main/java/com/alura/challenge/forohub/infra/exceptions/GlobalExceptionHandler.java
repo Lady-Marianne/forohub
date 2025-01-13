@@ -36,4 +36,9 @@ public class GlobalExceptionHandler {
                     error.getDefaultMessage());
         }
     }
+
+    @ExceptionHandler(UnauthorizedActionException.class)
+    public ResponseEntity<String> handleUnauthorizedActionException(UnauthorizedActionException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
 }

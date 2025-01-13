@@ -4,6 +4,7 @@ import com.alura.challenge.forohub.domain.answer.*;
 import com.alura.challenge.forohub.domain.topic.*;
 import com.alura.challenge.forohub.domain.user.User;
 import com.alura.challenge.forohub.infra.business.BusinessRulesService;
+import com.alura.challenge.forohub.infra.exceptions.UnauthorizedActionException;
 import com.alura.challenge.forohub.infra.exceptions.ValidationException;
 import com.alura.challenge.forohub.domain.user.UserRepository;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -17,6 +18,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -121,6 +123,7 @@ public class AnswerController {
         }
     }
 
+    // Mostrar las respuestas a un tópico determinado por topicId:
     @GetMapping
     public ResponseEntity<List<DataResponseAnswer>> getAnswersByTopicId(@RequestParam Long topicId) {
         List<Answer> answers = topicRepository.findAnswersByTopicId(topicId);
@@ -130,5 +133,42 @@ public class AnswerController {
         return ResponseEntity.ok(response);
     }
 
+    // Cerrar un tópico:
+    // Si un administrador marca, al menos una, de las respuestas como solución, cambiando el
+    // campo 'solution' a 'true', el tópico se cierra automáticamente, cambiando su estado a 'CLOSED'.
+    @PatchMapping("/{answerId}/solution")
+    @Secured("ROLE_ADMIN")
+    @Transactional
+    public ResponseEntity<?> markAsSolution(@PathVariable Long answerId) {
+
+        // Verificar si el usuario tiene el rol adecuado (ADMIN):
+        if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            throw new UnauthorizedActionException("Usted no está autorizado a realizar esta acción.");
+        }
+
+        // Buscar la respuesta por su ID:
+        Answer answer = answerRepository.findById(answerId)
+                .orElseThrow(() -> new EntityNotFoundException("Respuesta no encontrada."));
+
+        // Validar si ya está marcada como solución:
+        if (answer.isSolution()) {
+            throw new IllegalStateException("Esta respuesta ya está marcada como solución.");
+        }
+        // Marcar la respuesta como solución:
+        answer.setSolution(true);
+
+        // Cerrar el tópico relacionado usando el método de la clase Topic:
+        Topic topic = answer.getOneTopic();
+        if (!Status.CLOSED.equals(topic.getStatus())) {
+            topic.closeTopic();
+        }
+
+        // Guardar los cambios:
+        answerRepository.save(answer);
+        topicRepository.save(topic);
+
+        return ResponseEntity.ok("La respuesta fue marcada como solución y el tópico cerrado.");
+    }
 
 }

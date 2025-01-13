@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 @Configuration
 @EnableWebSecurity
@@ -42,6 +43,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, "/topics/**")
                         .hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/courses")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/answers/{answerId}/solution")
                         .hasRole("ADMIN")
                         // Rutas para usuarios con rol USER o ADMIN:
                         .requestMatchers(HttpMethod.POST, "/topics", "/answers")
