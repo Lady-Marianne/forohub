@@ -130,7 +130,7 @@ public class TopicController {
             // Obtener el usuario autenticado:
             User user = resourceService.getAuthenticatedUser();
 
-            Topic topic = topicRepository.getReferenceById(dataUpdateTopic.topicId());
+            Topic topic = topicRepository.getReferenceById(topicId); // Usar el ID del PathVariable.
 
             // Validar que el usuario autenticado sea el autor del tópico:
             if (!topic.getAuthor().equals(user.getUsername())) {

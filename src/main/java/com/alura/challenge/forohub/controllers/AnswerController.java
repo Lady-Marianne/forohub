@@ -97,7 +97,7 @@ public class AnswerController {
             // Obtener el usuario autenticado:
             User user = resourceService.getAuthenticatedUser();
 
-            Answer answer = answerRepository.getReferenceById(dataUpdateAnswer.answerId());
+            Answer answer = answerRepository.getReferenceById(answerId); // Usar el ID del PathVariable.
 
             // Validar que el usuario autenticado sea el autor del tópico:
             if (!answer.getAuthor().equals(user.getUsername())) {
