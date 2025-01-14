@@ -4,19 +4,18 @@ import com.alura.challenge.forohub.domain.course.Course;
 import com.alura.challenge.forohub.domain.course.CourseRepository;
 import com.alura.challenge.forohub.domain.course.DataRegisterCourse;
 import com.alura.challenge.forohub.domain.course.DataResponseCourse;
-import com.alura.challenge.forohub.domain.topic.Topic;
 import com.alura.challenge.forohub.infra.exceptions.ValidationException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.data.web.PageableDefault;
 
 import java.net.URI;
 import java.util.Optional;
@@ -49,5 +48,14 @@ public class CourseController {
                 .buildAndExpand(course.getCourseId()).toUri();
         // Devolver la respuesta con los detalles del curso creado:
         return ResponseEntity.status(HttpStatus.CREATED).body(new DataResponseCourse(course));
+    }
+
+    // Listar todos los cursos con paginación:
+    @GetMapping
+    public ResponseEntity<Page<DataResponseCourse>> listAllCourses(
+            @PageableDefault(size = 10) Pageable pageable) {
+        Page<Course> courses = courseRepository.findAll(pageable);
+        Page<DataResponseCourse> response = courses.map(DataResponseCourse::new);
+        return ResponseEntity.ok(response);
     }
 }
