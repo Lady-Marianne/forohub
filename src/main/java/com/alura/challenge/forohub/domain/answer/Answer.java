@@ -50,7 +50,6 @@ public class Answer {
         this.topic = topic.getTitle(); // Usamos el título del tópico.
         this.createdAt = LocalDateTime.now();
         this.author = username;
-        this.solution = dataRegisterAnswer.solution(); // Si se recibe 'solution' en el DTO.
         this.oneTopic = topic; // Asignamos el tópico a la respuesta.
     }
 

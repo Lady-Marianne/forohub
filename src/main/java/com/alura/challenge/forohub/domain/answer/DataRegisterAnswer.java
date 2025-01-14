@@ -9,10 +9,10 @@ public record DataRegisterAnswer(
         Long topicId,
 
         @NotBlank
-        String message,
+        String message
 
-        @NotNull
-        boolean solution
+//        @NotNull
+//        boolean solution
 
 ) {
 }
