@@ -26,25 +26,33 @@ La API está protegida mediante autenticación basada en JWT.
 ## Funcionalidades:
 
 ### Tópicos:
-- **POST /topics**: Crear un nuevo tópico.
-- **GET /topics**: Listar todos los tópicos activos.
+- **POST /topics**: Crear un nuevo tópico que será moderado automáticamente por OpenAI.
+- **GET /topics**: Listar todos los tópicos activos, cerrados o archivados.
 - **GET /topics/{id}**: Obtener detalles de un tópico específico.
-- **PUT /topics/{id}**: Editar un tópico.
-- **DELETE /topics/{id}**: Eliminar un tópico.
+- **PUT /topics/{id}**: Editar un tópico dentro de la primera hora después de su creación.
+- **DELETE /topics/{id}**: Eliminar un tópico (cambiar estado a DELETED). 
+- **PUT /topics/{topidId}/status**: Aprobar un tópico (cambiar estado a ACTIVE).
 
 ### Respuestas:
-- **POST /answers**: Crear una respuesta a un tópico.
+- **POST /answers**: Crear una respuesta a un tópico por topicId.
 - **GET /answers/{topicId}**: Obtener respuestas de un tópico.
-- **PUT /answers/{id}**: Editar una respuesta.
-- **DELETE /answers/{id}**: Eliminar una respuesta.
+- **PUT /answers/{id}**: Editar una respuesta dentro de la primera hora después de su creación.
+- **PATCH /answers/{answerId}/solution**: Marcar una respuesta como solución, lo cual cierra el tópico.
 
 ### Autenticación:
 - **POST /login**: Iniciar sesión y obtener un token JWT.
+
+### Usuarios:
 - **POST /users**: Crear un nuevo usuario.
+- **POST /users/admins**: Crear un nuevo usuario con rol de administrador.
+
+### Cursos:
+- **POST /courses**: Crear un nuevo curso por parte de un administrador.
+- **GET /courses**: Listar todos los cursos disponibles.
 
 ### Reglas de Negocio:
-1. **Restricciones de horario para publicaciones**: Sólo se pueden hacer publicaciones entre las 7:00 AM 
-2. y las 11:59 PM.
+1. **Restricciones de horario para publicaciones**: Sólo se pueden hacer publicaciones entre
+las 7:00 AM y las 11:59 PM.
 2. **Tiempo para editar tópicos**: Los tópicos sólo se pueden editar dentro de la primera hora 
 después de su creación.
 
@@ -99,157 +107,44 @@ utilizando el modelo `gpt-4o-mini` y configurando los parámetros necesarios par
 - **Prevención proactiva**: Los contenidos inapropiados no llegan a ser publicados, manteniendo la 
 calidad del foro.
 
-#### Mejoras futuras:
-Aunque la integración actual es funcional, planeamos mejorarla implementando:
-- **Retroalimentación al usuario**: Brindar mensajes claros sobre qué reglas fueron violadas en caso
-de que el contenido no cumpla.
-- **Moderación de respuestas**: Extender la funcionalidad para validar también los mensajes publicados
-como respuestas.
-
-Con esta implementación, ForoHub se asegura de ofrecer un espacio seguro y útil para su comunidad técnica.
+Con esta implementación, ForoHub se asegura de ofrecer un espacio seguro y útil para su comunidad
+técnica.
 
 ## Tecnologías:
 
-- **Backend**: Spring Boot 2.x, Spring Security, JPA, JWT.
-- **Base de datos**: MySQL.
+- **Backend**: Spring Boot 3.x, Spring Security, JPA, JWT.
+- **Base de datos**: MySQL, migraciones Flyway.
 - **Autenticación**: JWT (JSON Web Token).
-- **Testing**: JUnit, Mockito. (Próximamente)
+- **Testing**: JUnit, Mockito. (Próximamente).
+- **Documentación**: SpringDoc/Swagger UI.
+- **Integración con OpenAI**: SpringAI.
+- **Probador de API**: Insomnia. 
+- **IDE**: IntelliJ IDEA.
 
 ## Requisitos:
 
 - Java 17 o superior.
+- Spring Boot 3.x.
 - Maven.
 - MySQL (o cualquier base de datos compatible con JPA).
-- Instalar dependencias con:
-  ```bash
-  mvn install
-  ```
 
 ## Instalación:
 
-1. Clona el repositorio:
+1. Clonar el repositorio:
    ```bash
    git clone https://github.com/tu_usuario/forohub.git
    ```
 
-2. Configura tu base de datos y agrega las credenciales en el archivo `application.properties`:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/forohub
-   spring.datasource.username=tu_usuario
-   spring.datasource.password=tu_contraseña
-   spring.jpa.hibernate.ddl-auto=update
+2. Configurar la base de datos y agregar las credenciales en el archivo `application.properties`:
+   ```properties:
+   
+spring.application.name=forohub
+
+spring.datasource.url=jdbc:mysql://localhost:3306/foro_hub?createDatabaseIfNotExist=true
+spring.datasource.username=${DATASOURCE_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+forohub.security.secret=${JWT_SECRET_FOROHUB:clavesecreta123}
    ```
 
-3. Corre la aplicación:
-   ```bash
-   mvn spring-boot:run
-   ```
 
-## Endpoints:
 
-### Autenticación:
-
-#### POST /login:
-Inicia sesión y recibe un token JWT.
-
-**Request Body**:
-```json
-{
-  "username": "usuario",
-  "password": "contraseña"
-}
-```
-
-**Response**:
-```json
-{
-  "jwTtoken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
-#### POST /users:
-Crea un nuevo usuario.
-
-**Request Body**:
-```json
-{
-  "username": "nuevo_usuario",
-  "password": "contraseña",
-  "email": "email@dominio.com"
-}
-```
-
-**Response**:
-```json
-{
-  "message": "Usuario creado exitosamente"
-}
-```
-
-### Tópicos:
-
-#### POST /topics:
-Crea un nuevo tópico.
-
-**Request Body**:
-```json
-{
-  "title": "Título del tópico",
-  "message": "Contenido del mensaje",
-  "author": "Nombre del autor"
-}
-```
-
-**Response**:
-```json
-{
-  "id": 1,
-  "title": "Título del tópico",
-  "message": "Contenido del mensaje",
-  "author": "Nombre del autor",
-  "created_at": "2025-01-01T10:00:00"
-}
-```
-
-#### GET /topics:
-Obtiene todos los tópicos.
-
-**Response**:
-```json
-[
-  {
-    "id": 1,
-    "title": "Título del tópico",
-    "message": "Contenido del mensaje",
-    "author": "Nombre del autor",
-    "created_at": "2025-01-01T10:00:00"
-  }
-]
-```
-
-### Respuestas:
-
-#### POST /answers:
-Crea una respuesta a un tópico.
-
-**Request Body**:
-```json
-{
-  "topicId": 1,
-  "message": "Contenido de la respuesta"
-}
-```
-## Seguridad:
-
-La API utiliza **JWT (JSON Web Token)** para la autenticación. Debes incluir el token en el encabezado
-de autorización de las solicitudes:
-
-```bash
-Authorization: Bearer <tu_token_jwt>
-```
-
-## Documentación:
-
-La documentación de la API está disponible en Swagger UI:
-
-- **URL**: `/swagger-ui.html`
