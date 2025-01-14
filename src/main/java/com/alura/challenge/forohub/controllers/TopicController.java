@@ -78,6 +78,7 @@ public class TopicController {
         Topic topic = new Topic(dataRegisterTopic, user.getUsername());
         topic.setUser(user); // Asigna el usuario autenticado al tópico.
         topic.setOneCourse(course);
+
         // Asignar el nombre del curso al campo 'course' (String):
         topic.setCourse(course.getName());
 
@@ -99,11 +100,28 @@ public class TopicController {
         return ResponseEntity.created(url).body(new DataResponseTopic(topic));
     }
 
-    // Mostrar los tópicos activos:
+    // Mostrar los tópicos según su estado (ACTIVE, CLOSED o ARCHIVED). Sólo los administradores pueden
+    // ver los tópicos con estado "DELETED" o "PENDING".
+    // Endpoints:
+    // - GET /topics
+    // - GET /topics?status=CLOSED
+    // - GET /topics?status=ARCHIVED
     @GetMapping
-    public ResponseEntity<Page<DataResponseTopic>> listActiveTopics(@PageableDefault(size = 10)
-                                                                    Pageable pageable) {
-        Page<Topic> topics = topicRepository.findByStatus(Status.ACTIVE, pageable);
+    public ResponseEntity<Page<DataResponseTopic>> listTopicsByStatus(
+            @RequestParam(required = false, defaultValue = "ACTIVE") String status,
+            @PageableDefault(size = 10)
+            Pageable pageable) {
+
+        // Convertir el parámetro `status` a un valor del Enum `Status`:
+        Status topicStatus;
+        try {
+            topicStatus = Status.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException("El estado proporcionado no es válido. Use ACTIVE, CLOSED o ARCHIVED.");
+        }
+
+        // Filtrar los tópicos por el estado solicitado:
+        Page<Topic> topics = topicRepository.findByStatus(topicStatus, pageable);
         Page<DataResponseTopic> response = topics.map(DataResponseTopic::new);
         return ResponseEntity.ok(response);
     }
