@@ -1,0 +1,8 @@
+-- Crear la tabla 'courses':
+
+CREATE TABLE courses (
+    course_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    category VARCHAR(100) NOT NULL
+    category ENUM('BACKEND', 'FRONTEND', 'DEVOPS', 'DATABASES', 'SOFTWARE_ENGINEERING') NOT NULL
+);

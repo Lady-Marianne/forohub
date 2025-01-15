@@ -1,4 +1,4 @@
--- Crear la tabla "answers" (respuestas) con las siguientes columnas:
+-- Crear la tabla 'answers':
 
 CREATE TABLE answers (
     answer_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,

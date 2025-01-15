@@ -1,2 +1,0 @@
-ALTER TABLE users DROP COLUMN eMail;
-ALTER TABLE users RENAME COLUMN e_mail TO email;
