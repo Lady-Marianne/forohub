@@ -117,17 +117,54 @@ calidad del foro.
 Con esta implementación, ForoHub se asegura de ofrecer un espacio seguro y útil para su comunidad
 técnica.
 
-## Tecnologías:
+## Testing:
+
+Claro, aquí tienes una posible descripción para incluir en tu README sobre los tests realizados en el proyecto:
+
+---
+
+### Testing
+
+En el proyecto ForoHub, implementé pruebas utilizando **JUnit** y **Mockito** para garantizar el
+correcto funcionamiento algunos controladores y servicios principales. A continuación, se detalla 
+un resumen de las pruebas realizadas en el controlador `TopicController`:
+
+1. **Prueba de validación de datos (HTTP 400)**  
+   Se asegura que el sistema responda con un código de estado HTTP 400 cuando se intenta registrar 
+un tópico sin datos válidos. Esto garantiza que las validaciones en los DTO y controladores 
+funcionan correctamente.
+
+   - **Clase:** `TopicControllerTest`
+   - **Método:** `registerTopic_invalidData()`
+   - **Resultado esperado:** Respuesta con código de estado `400 Bad Request`.
+
+2. **Prueba de registro exitoso (HTTP 201)**  
+   Se valida que, al registrar un tópico con datos válidos, el sistema devuelva un código de estado
+HTTP 201 y el tópico se almacene correctamente en la base de datos.
+3. 
+   - **Clase:** `TopicControllerTest`
+   - **Método:** `registerTopic_validData()`
+   - **Descripción del proceso:**
+      - Se crea un mock de usuario autenticado y un mock del curso.
+      - Se simula el guardado del tópico utilizando **Mockito** para interceptar la llamada al repositorio.
+      - Se valida la respuesta del controlador para confirmar que el contenido del tópico creado 
+     coincide con el esperado.
+   - **Resultado esperado:** Respuesta con código de estado `201 Created` y un JSON que representa el
+   tópico registrado.
+
+## Tecnologías utilizadas:
 
 - **Backend**: Spring Boot 3.x, Spring Security, JPA, JWT.
 - **Base de datos**: MySQL, migraciones Flyway.
 - **Autenticación**: JWT (JSON Web Token).
-- **Testing**: JUnit, Mockito. (Próximamente).
+- **Testing**: JUnit, Mockito.
 - **Documentación**: SpringDoc/Swagger UI.
 - **Integración con OpenAI**: SpringAI.
 - **Probador de API**: Insomnia. 
 - **IDE**: IntelliJ IDEA.
 - **ChatGPT, alias "Ada"**: Ayudante y compañera de trabajo.
+- **GitHub**: Control de versiones.
+- **GitHub Copilot**: Asistente de programación.
 
 ![swagger.png](images/swagger.png)
 
@@ -159,8 +196,6 @@ spring.application.name=forohub
 spring.datasource.url=jdbc:mysql://localhost:3306/foro_hub?createDatabaseIfNotExist=true
 spring.datasource.username=${DATASOURCE_USERNAME}
 spring.datasource.password=${DB_PASSWORD}
-forohub.security.secret=${JWT_SECRET_FOROHUB:clavesecreta123}
+forohub.security.secret=${JWT_SECRET_FOROHUB:mi_clave_secreta}
 spring.jpa.hibernate.ddl-auto=validate
 ```
-
-
