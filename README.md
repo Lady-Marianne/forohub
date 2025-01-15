@@ -117,12 +117,6 @@ calidad del foro.
 Con esta implementación, ForoHub se asegura de ofrecer un espacio seguro y útil para su comunidad
 técnica.
 
-## Testing:
-
-Claro, aquí tienes una posible descripción para incluir en tu README sobre los tests realizados en el proyecto:
-
----
-
 ### Testing
 
 En el proyecto ForoHub, implementé pruebas utilizando **JUnit** y **Mockito** para garantizar el
