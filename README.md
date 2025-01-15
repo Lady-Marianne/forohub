@@ -62,12 +62,12 @@ eliminó un tópico y se detecta que cumple con las reglas, un administrador pue
 
 1. **Restricciones de horario para publicaciones**: Sólo se pueden hacer publicaciones entre
 las 7:00 AM y las 11:59 PM.
-2. **Tiempo para editar tópicos**: Los tópicos sólo se pueden editar dentro de la primera hora 
+2. **Tiempo para editar tópicos**: Los tópicos y respuesta sólo se pueden editar dentro de la primera hora 
 después de su creación.
 
 ![insomnia.png](images/insomnia.png)
 
-### Integración con OpenAI, usando SpringAI, para moderar contenido(ModerationService):
+### Integración con OpenAI, usando SpringAI, para moderar contenido (ModerationService):
 
 En el proyecto ForoHub, hemos implementado una integración con OpenAI para moderar los contenidos 
 generados por los usuarios antes de que se almacenen en la base de datos. Este sistema asegura que los 
