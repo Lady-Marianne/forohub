@@ -1,3 +1,5 @@
+# ALURA LATAM - ONE - Oracle Next Education.
+
 # ForoHub API: Foro educativo de programación y desarrollo de software.
 
 # Desarrollado por: Mariana Andrea Lois (Lady Marianne).
@@ -24,7 +26,8 @@ Esta aplicación es un foro donde los usuarios pueden:
 
 ## Funcionalidades:
 
-### Tópicos:
+### Tópicos (TopicController):
+
 - **POST /topics**: Crear un nuevo tópico que será moderado automáticamente por OpenAI.
 - **GET /topics**: Listar todos los tópicos activos, cerrados o archivados.
 - **GET /topics/{id}**: Obtener detalles de un tópico específico.
@@ -34,24 +37,29 @@ un tópico y se detecta que no cumple con las reglas, un adminsitrador puede eli
 - **PUT /topics/{topidId}/status**: Aprobar un tópico (cambiar estado a ACTIVE). Si el algoritmo de OpenAI
 eliminó un tópico y se detecta que cumple con las reglas, un administrador puede aprobarlo.
 
-### Respuestas:
+### Respuestas (AnswerController):
+
 - **POST /answers**: Crear una respuesta a un tópico por topicId.
 - **GET /answers/{topicId}**: Obtener respuestas de un tópico.
 - **PUT /answers/{id}**: Editar una respuesta dentro de la primera hora después de su creación.
 - **PATCH /answers/{answerId}/solution**: Marcar una respuesta como solución, lo cual cierra el tópico.
 
-### Autenticación:
+### Autenticación (AuthenticationController):
+
 - **POST /login**: Iniciar sesión y obtener un token JWT.
 
-### Usuarios:
+### Usuarios (UserController):
+
 - **POST /users**: Crear un nuevo usuario.
 - **POST /users/admins**: Crear un nuevo usuario con rol de administrador.
 
-### Cursos:
+### Cursos (CourseController):
+
 - **POST /courses**: Crear un nuevo curso por parte de un administrador.
 - **GET /courses**: Listar todos los cursos disponibles.
 
-### Reglas de Negocio:
+### Reglas de Negocio (BusinessRulesService):
+
 1. **Restricciones de horario para publicaciones**: Sólo se pueden hacer publicaciones entre
 las 7:00 AM y las 11:59 PM.
 2. **Tiempo para editar tópicos**: Los tópicos sólo se pueden editar dentro de la primera hora 
@@ -59,7 +67,7 @@ después de su creación.
 
 ![insomnia.png](images/insomnia.png)
 
-### Integración con OpenAI usando SpringAI para moderar contenido:
+### Integración con OpenAI, usando SpringAI, para moderar contenido(ModerationService):
 
 En el proyecto ForoHub, hemos implementado una integración con OpenAI para moderar los contenidos 
 generados por los usuarios antes de que se almacenen en la base de datos. Este sistema asegura que los 
@@ -78,6 +86,7 @@ relacionados con desarrollo backend y frontend, DevOps, bases de datos e ingenie
 Mensajes fuera de estas áreas serán rechazados.
 
 #### Cómo funciona la integración:
+
 1. **Creación del prompt**: Cuando un usuario intenta registrar un tópico, el sistema genera un prompt
 que describe las reglas del foro y presenta el contenido del tópico (título y mensaje) como texto a
 evaluar.
@@ -107,6 +116,22 @@ utilizando el modelo `gpt-4o-mini` y configurando los parámetros necesarios par
 3. **Clase `TopicController`**: Invoca la moderación desde el endpoint de creación de tópicos 
 (`registerTopic`) para determinar si el contenido es aceptable.
 
+4. **Clase `OpenAIconfig`**: Esta clase configura la integración con la API de OpenAI. Es fundamental
+5. para conectar el sistema de moderación del foro con los servicios de OpenAI. A continuación, 
+6. sus principales características:
+
+- **Propósito**: Proveer una instancia de `OpenAiApi` utilizando la clave de API proporcionada por OpenAI.
+- **Implementación**:
+    - Define un bean de tipo `OpenAiApi` mediante la anotación `@Bean`.
+    - Obtiene la clave API desde la variable de entorno `OPENAI_API_KEY`, asegurando que esta clave 
+  esté correctamente configurada. Si no lo está, lanza una excepción para advertir al desarrollador.
+    - Devuelve una instancia de `OpenAiApi` que se utiliza en el servicio de moderación para validar 
+  contenidos de los tópicos antes de ser almacenados en la base de datos.
+- **Seguridad**: Se asegura de que la clave API no sea nula ni vacía antes de instanciar el cliente 
+de OpenAI, minimizando posibles errores de configuración.
+
+Esta clase es un componente esencial para garantizar una integración fluida y segura con la API de OpenAI.
+
 #### Beneficios de la integración:
 
 - **Automatización**: La moderación automática ahorra tiempo al equipo administrativo del foro.
@@ -117,7 +142,9 @@ calidad del foro.
 Con esta implementación, ForoHub se asegura de ofrecer un espacio seguro y útil para su comunidad
 técnica.
 
-### Testing
+![forohub_app.png](images/forohub_app.png)
+
+### Testing (TopicControllerTest):
 
 En el proyecto ForoHub, implementé pruebas utilizando **JUnit** y **Mockito** para garantizar el
 correcto funcionamiento algunos controladores y servicios principales. A continuación, se detalla 
@@ -148,17 +175,35 @@ HTTP 201 y el tópico se almacene correctamente en la base de datos.
 
 ## Tecnologías utilizadas:
 
-- **Backend**: Spring Boot 3.x, Spring Security, JPA, JWT.
-- **Base de datos**: MySQL, migraciones Flyway.
-- **Autenticación**: JWT (JSON Web Token).
-- **Testing**: JUnit, Mockito.
-- **Documentación**: SpringDoc/Swagger UI.
-- **Integración con OpenAI**: SpringAI.
-- **Probador de API**: Insomnia. 
-- **IDE**: IntelliJ IDEA.
-- **ChatGPT, alias "Ada"**: Ayudante y compañera de trabajo.
-- **GitHub**: Control de versiones.
-- **GitHub Copilot**: Asistente de programación.
+- **Herramientas de desarrollo**:
+    - IntelliJ IDEA (IDE).
+    - GitHub (control de versiones).
+    - GitHub Copilot (asistente de programación).
+    - ChatGPT, alias "Ada" (ayudante y compañera de trabajo).
+
+- **Backend**:
+    - Spring Boot 3.x.
+    - Spring Security.
+    - JPA (Java Persistence API).
+    - JWT (JSON Web Token).
+    - Lombok (anotaciones para reducir código boilerplate).
+
+- **Base de datos**:
+    - MySQL.
+    - Migraciones Flyway.
+
+- **Integraciones externas**:
+    - SpringAI (integración con OpenAI).
+
+- **Testing**:
+    - JUnit.
+    - Mockito.
+
+- **Documentación**:
+    - SpringDoc/Swagger UI.
+
+- **Probador de API**:
+    - Insomnia.
 
 ![swagger.png](images/swagger.png)
 
@@ -169,7 +214,7 @@ HTTP 201 y el tópico se almacene correctamente en la base de datos.
 - Maven.
 - MySQL (o cualquier base de datos compatible con JPA).
 
-## Base de Datos:
+## Base de Datos (foro_hub):
 
 ![diagrama_db.png](images/diagrama_db.png)
 

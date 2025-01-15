@@ -1,5 +1,4 @@
 package com.alura.challenge.forohub.infra.openia;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +30,4 @@ public class ModerationService {
         System.out.println("Respuesta de OpenAI: " + response);
         return response.trim().equalsIgnoreCase("CUMPLE");
     }
-
 }
