@@ -148,7 +148,7 @@ técnica.
 
 2. Configurar la base de datos y agregar las credenciales en el archivo `application.properties`:
    
-````
+```properties
 spring.application.name=forohub
 
 spring.datasource.url=jdbc:mysql://localhost:3306/foro_hub?createDatabaseIfNotExist=true
@@ -156,6 +156,6 @@ spring.datasource.username=${DATASOURCE_USERNAME}
 spring.datasource.password=${DB_PASSWORD}
 forohub.security.secret=${JWT_SECRET_FOROHUB:clavesecreta123}
 spring.jpa.hibernate.ddl-auto=validate
-````
+```
 
 
