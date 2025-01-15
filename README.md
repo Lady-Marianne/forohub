@@ -1,4 +1,5 @@
-# ForoHub API
+# ForoHub API: Foro educativo de programación y desarrollo de software.
+
 # Desarrollado por: Mariana Andrea Lois (Lady Marianne).
 
 ForoHub es un foro educativo para discutir y aprender sobre diferentes tópicos relacionados con 
@@ -9,19 +10,17 @@ los siguientes temas:
 - Ingeniería de software.
 - Bases de datos.
 
-Los usuarios pueden crear tópicos, responder a ellos, y editar sus respuestas dentro de un marco de 
-reglas de tiempo específicas. La API está construida con **Spring Boot** 
-y utiliza JWT para su autenticación.
+Los usuarios pueden crear tópicos, responder a ellos, y editar tanto tópicos como respuestas dentro 
+de un marco de reglas de tiempo específicas. La API está construida con **Spring Boot** y utiliza
+JWT para su autenticación.
 
 ## Descripción:
 
 Esta aplicación es un foro donde los usuarios pueden:
-- Crear y gestionar tópicos.
+- Crear y editar tópicos.
 - Responder a los tópicos existentes.
-- Editar sus respuestas dentro de una hora desde la publicación.
+- Editar los tópicos y las respuestas dentro de una hora desde la publicación.
 - Respetar restricciones de horario para realizar publicaciones (7:00 AM a 11:59 PM).
-
-La API está protegida mediante autenticación basada en JWT.
 
 ## Funcionalidades:
 
@@ -139,12 +138,18 @@ técnica.
 - Maven.
 - MySQL (o cualquier base de datos compatible con JPA).
 
+## Base de Datos:
+
+![diagrama_db.png](images/diagrama_db.png)
+
+![database.png](images/database.png)
+
 ## Instalación:
 
 1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/Lady-Marianne/forohub.git
-   ```
+```bash
+git clone https://github.com/Lady-Marianne/forohub.git
+```
 
 2. Configurar la base de datos y agregar las credenciales en el archivo `application.properties`:
    
