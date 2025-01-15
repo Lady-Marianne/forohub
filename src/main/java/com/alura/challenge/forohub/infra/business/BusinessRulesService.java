@@ -17,7 +17,7 @@ public class BusinessRulesService {
 
         if (now.isBefore(start) || now.isAfter(end)) {
             throw new ValidationException(
-                    "Las publicaciones solo están permitidas entre las 7:00 y las 23:59.");
+                    "Las publicaciones solo están permitidas entre las 7:00 y las 23:59 hs.");
         }
     }
 

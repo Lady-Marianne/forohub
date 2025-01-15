@@ -30,8 +30,10 @@ La API está protegida mediante autenticación basada en JWT.
 - **GET /topics**: Listar todos los tópicos activos, cerrados o archivados.
 - **GET /topics/{id}**: Obtener detalles de un tópico específico.
 - **PUT /topics/{id}**: Editar un tópico dentro de la primera hora después de su creación.
-- **DELETE /topics/{id}**: Eliminar un tópico (cambiar estado a DELETED). 
-- **PUT /topics/{topidId}/status**: Aprobar un tópico (cambiar estado a ACTIVE).
+- **DELETE /topics/{id}**: Eliminar un tópico (cambiar estado a DELETED). Si el algoritmo de OpenAI dejó
+un tópico y se detecta que no cumple con las reglas, un adminsitrador puede eliminarlo.
+- **PUT /topics/{topidId}/status**: Aprobar un tópico (cambiar estado a ACTIVE). Si el algoritmo de OpenAI
+eliminó un tópico y se detecta que cumple con las reglas, un administrador puede aprobarlo.
 
 ### Respuestas:
 - **POST /answers**: Crear una respuesta a un tópico por topicId.
@@ -56,6 +58,8 @@ las 7:00 AM y las 11:59 PM.
 2. **Tiempo para editar tópicos**: Los tópicos sólo se pueden editar dentro de la primera hora 
 después de su creación.
 
+![insomnia.png](images/insomnia.png)
+
 ### Integración con OpenAI usando SpringAI para moderar contenido:
 
 En el proyecto ForoHub, hemos implementado una integración con OpenAI para moderar los contenidos 
@@ -64,6 +68,7 @@ tópicos creados cumplan con las reglas del foro, promoviendo un ambiente respet
 todos los participantes.
 
 #### Objetivo de la moderación:
+
 El objetivo principal de esta funcionalidad es validar que:
 
 1. **No se publiquen contenidos discriminatorios, ofensivos o insultantes**: Por ejemplo, mensajes que 
@@ -82,12 +87,15 @@ evaluar.
 lenguaje de OpenAI utilizando la dependencia `SpringAI` para realizar una solicitud al API.
 
 3. **Evaluación del contenido**: OpenAI responde con un veredicto: “CUMPLE” o “NO CUMPLE”, indicando 
-si el contenido respeta las reglas establecidas.
+si el contenido respeta o no las reglas establecidas.
 
 4. **Decisión basada en el resultado**:
-    - Si el contenido “CUMPLE” con las reglas, el estado del tópico cambia a **ACTIVE** (activo).
+    - Si el contenido “CUMPLE” con las reglas, el estado del tópico cambia de su estado
+por default (**PENDING**) a **ACTIVE** (activo).
     - Si el contenido “NO CUMPLE”, el estado del tópico cambia a **DELETED** (eliminado) para evitar 
    su publicación.
+    - Si el algoritmo comete un error, un administrador puede revisar el tópico y aprobarlo o 
+   rechazarlo.
 
 #### Código involucrado:
 
@@ -120,6 +128,9 @@ técnica.
 - **Integración con OpenAI**: SpringAI.
 - **Probador de API**: Insomnia. 
 - **IDE**: IntelliJ IDEA.
+- **ChatGPT, alias "Ada"**: Ayudante y compañera de trabajo.
+
+![swagger.png](images/swagger.png)
 
 ## Requisitos:
 
@@ -132,11 +143,10 @@ técnica.
 
 1. Clonar el repositorio:
    ```bash
-   git clone https://github.com/tu_usuario/forohub.git
+   git clone https://github.com/Lady-Marianne/forohub.git
    ```
 
 2. Configurar la base de datos y agregar las credenciales en el archivo `application.properties`:
-   ```properties:
    
 spring.application.name=forohub
 
@@ -144,7 +154,7 @@ spring.datasource.url=jdbc:mysql://localhost:3306/foro_hub?createDatabaseIfNotEx
 spring.datasource.username=${DATASOURCE_USERNAME}
 spring.datasource.password=${DB_PASSWORD}
 forohub.security.secret=${JWT_SECRET_FOROHUB:clavesecreta123}
-   ```
+spring.jpa.hibernate.ddl-auto=validate
 
 
 
