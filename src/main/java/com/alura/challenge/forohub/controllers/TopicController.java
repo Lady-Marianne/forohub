@@ -3,6 +3,7 @@ package com.alura.challenge.forohub.controllers;
 import com.alura.challenge.forohub.domain.course.Course;
 import com.alura.challenge.forohub.domain.course.CourseRepository;
 import com.alura.challenge.forohub.infra.business.BusinessRulesService;
+import com.alura.challenge.forohub.infra.exceptions.UnauthorizedActionException;
 import com.alura.challenge.forohub.infra.exceptions.ValidationException;
 import com.alura.challenge.forohub.domain.topic.*;
 import com.alura.challenge.forohub.domain.user.User;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -100,12 +102,15 @@ public class TopicController {
         return ResponseEntity.created(url).body(new DataResponseTopic(topic));
     }
 
-    // Mostrar los tópicos según su estado (ACTIVE, CLOSED o ARCHIVED). Sólo los administradores pueden
+    // Mostrar los tópicos según su status. Sólo los administradores pueden
     // ver los tópicos con estado "DELETED" o "PENDING".
+    // El resto puede ser visto por todos los usuarios.
     // Endpoints:
     // - GET /topics
     // - GET /topics?status=CLOSED
     // - GET /topics?status=ARCHIVED
+    // - GET /topics?status=DELETED
+    // - GET /topics?status=PENDING
     @GetMapping
     public ResponseEntity<Page<DataResponseTopic>> listTopicsByStatus(
             @RequestParam(required = false, defaultValue = "ACTIVE") String status,
@@ -117,9 +122,16 @@ public class TopicController {
         try {
             topicStatus = Status.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new ValidationException("El estado proporcionado no es válido. Use ACTIVE, CLOSED o ARCHIVED.");
+            throw new ValidationException("El estado proporcionado no es válido." +
+                    " Use ACTIVE, PENDING, CLOSED, ARCHIVED o DELETED.");
         }
 
+        // Verificar si el estado solicitado es PENDING o DELETED
+        if ((topicStatus == Status.PENDING || topicStatus == Status.DELETED) &&
+                !resourceService.isAdmin()) {
+            throw new AccessDeniedException("No tiene permisos para ver tópicos " +
+                    "borrados o pendientes de moderación.");
+        }
         // Filtrar los tópicos por el estado solicitado:
         Page<Topic> topics = topicRepository.findByStatus(topicStatus, pageable);
         Page<DataResponseTopic> response = topics.map(DataResponseTopic::new);
