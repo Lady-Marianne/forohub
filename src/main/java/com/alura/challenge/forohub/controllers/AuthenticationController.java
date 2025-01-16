@@ -4,6 +4,7 @@ import com.alura.challenge.forohub.domain.user.DataAuthenticateUser;
 import com.alura.challenge.forohub.domain.user.User;
 import com.alura.challenge.forohub.infra.security.DataJWTToken;
 import com.alura.challenge.forohub.infra.security.TokenService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/login")
 @RequiredArgsConstructor
+@Tag(name = "Login de usuario (Authentication-Controller)")
 public class AuthenticationController {
 
     @Autowired
